@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TIME VAULT — Curated Premium Watches</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --white: #ffffff;
+    --off-white: #f2f2f2;
+    --light: #cccccc;
+    --mid: #888888;
+    --dark: #222222;
+    --darker: #111111;
+    --black: #000000;
+    --border: rgba(255,255,255,0.12);
+    --border-strong: rgba(255,255,255,0.25);
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── CURSOR ── */
+  #cur {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    top: 0; left: 0;
+    will-change: transform;
+  }
+  #cur svg { display: block; }
+  body:has(a:hover) #cur svg,
+  body:has(button:hover) #cur svg,
+  body:has(.product-card:hover) #cur svg,
+  body:has(.location-card:hover) #cur svg { transform: scale(1.4); }
+
+  /* ── LOADER ── */
+  .loader {
+    position: fixed; inset: 0; background: var(--black);
+    z-index: 9000; display: flex; align-items: center; justify-content: center; flex-direction: column;
+    animation: loaderOut 0.5s ease 2.6s forwards;
+  }
+  .loader-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem; font-weight: 300; letter-spacing: 0.45em;
+    color: var(--white); opacity: 0;
+    animation: fadeUp 0.8s ease 0.3s forwards;
+  }
+  .loader-line {
+    width: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, #fff, transparent);
+    animation: lineGrow 1s ease 0.9s forwards;
+    margin-top: 1.2rem;
+  }
+  .loader-sub {
+    font-size: 0.55rem; letter-spacing: 0.55em; color: var(--mid);
+    opacity: 0; margin-top: 1rem; text-transform: uppercase;
+    animation: fadeUp 0.6s ease 1.6s forwards;
+  }
+  @keyframes loaderOut { to { opacity: 0; pointer-events: none; } }
+  @keyframes lineGrow  { to { width: 180px; } }
+  @keyframes fadeUp    { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 2rem 4rem;
+    display: flex; align-items: center; justify-content: space-between;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.96), transparent);
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem; letter-spacing: 0.3em; font-weight: 300;
+  }
+  .nav-logo em { font-style: italic; color: var(--light); }
+  .nav-links { display: flex; gap: 3rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--mid); text-decoration: none; transition: color 0.25s; position: relative;
+  }
+  .nav-links a::after {
+    content:''; position:absolute; bottom:-4px; left:0;
+    width:0; height:1px; background:#fff; transition: width 0.25s;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cta {
+    font-size: 0.6rem; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--white); border: 1px solid rgba(255,255,255,0.4);
+    padding: 0.65rem 1.8rem; cursor: none; transition: all 0.25s;
+    background: transparent; font-family: 'Montserrat', sans-serif;
+  }
+  .nav-cta:hover { background: var(--white); color: var(--black); border-color: var(--white); }
+
+  /* ── HERO ── */
+  .hero {
+    height: 100vh; display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+  }
+  .hero-content {
+    text-align: center; position: relative; z-index: 2;
+    opacity: 0; animation: fadeUp 1s ease 2.9s forwards;
+  }
+  .hero-eyebrow {
+    font-size: 0.58rem; letter-spacing: 0.6em; text-transform: uppercase;
+    color: var(--mid); margin-bottom: 2rem;
+  }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(4.5rem, 10vw, 9.5rem);
+    font-weight: 300; line-height: 0.88;
+  }
+  .hero-title em { font-style: italic; color: var(--light); }
+  .hero-sub {
+    margin-top: 2.5rem;
+    font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--mid); max-width: 38ch; margin-left: auto; margin-right: auto; line-height: 2.2;
+  }
+  .hero-actions { margin-top: 3.5rem; display: flex; gap: 1.5rem; justify-content: center; align-items: center; }
+  .btn-primary {
+    font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--black); background: var(--white);
+    padding: 1rem 2.8rem; cursor: none; border: none;
+    font-family: 'Montserrat', sans-serif;
+    transition: background 0.25s, color 0.25s;
+    position: relative; overflow: hidden;
+  }
+  .btn-primary:hover { background: var(--light); }
+  .btn-ghost {
+    font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--mid); background: transparent;
+    padding: 1rem 1.5rem; cursor: none; border: none;
+    font-family: 'Montserrat', sans-serif; transition: color 0.25s;
+    display: flex; align-items: center; gap: 0.7rem;
+  }
+  .btn-ghost:hover { color: var(--white); }
+  .btn-ghost .arr { transition: transform 0.25s; display: inline-block; }
+  .btn-ghost:hover .arr { transform: translateX(5px); }
+
+  /* Hero watch */
+  .hero-watch {
+    position: absolute; right: 7%; top: 50%;
+    width: 250px;
+    opacity: 0; animation: watchIn 1s ease 3.2s forwards;
+    transform: translateY(-50%) translateX(30px);
+  }
+  @keyframes watchIn { to { opacity: 1; transform: translateY(-50%) translateX(0); } }
+  .watch-float { animation: floatY 7s ease-in-out infinite; }
+  @keyframes floatY { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+
+  /* Scroll cue */
+  .scroll-cue {
+    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.8rem;
+    opacity: 0; animation: fadeUp 0.8s ease 3.4s forwards;
+  }
+  .scroll-cue span { font-size: 0.5rem; letter-spacing: 0.45em; color: var(--mid); text-transform: uppercase; }
+  .scroll-line {
+    width: 1px; height: 55px;
+    background: linear-gradient(to bottom, #fff, transparent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:0.2} 50%{opacity:0.8} }
+
+  /* ── MARQUEE ── */
+  .marquee-wrap { overflow: hidden; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 1.6rem 0; }
+  .marquee-track { display: flex; gap: 3.5rem; animation: marquee 22s linear infinite; white-space: nowrap; }
+  .m-item { font-size: 0.58rem; letter-spacing: 0.45em; text-transform: uppercase; color: var(--mid); flex-shrink: 0; display: flex; align-items: center; gap: 1.2rem; }
+  .m-dot { width: 3px; height: 3px; background: var(--mid); border-radius: 50%; flex-shrink: 0; }
+  @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  /* ── ABOUT ── */
+  .about { padding: 8rem 4rem; display: grid; grid-template-columns: 1fr 1fr; gap: 8rem; align-items: center; }
+  .sec-label { font-size: 0.58rem; letter-spacing: 0.5em; text-transform: uppercase; color: var(--mid); margin-bottom: 1.8rem; }
+  .about-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.4rem,5vw,4rem); font-weight: 300; line-height: 1.1; }
+  .about-title em { font-style: italic; color: var(--light); }
+  .about-body { font-size: 0.72rem; line-height: 2.3; color: var(--mid); margin-top: 1.8rem; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .stat { border-left: 1px solid var(--border-strong); padding-left: 1.5rem; }
+  .stat-n { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 300; color: var(--white); line-height: 1; }
+  .stat-l { font-size: 0.58rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--mid); margin-top: 0.4rem; }
+
+  /* ── COLLECTIONS ── */
+  .collections { padding: 6rem 4rem; }
+  .sec-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 3.5rem; }
+  .sec-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem,4vw,3.5rem); font-weight: 300; }
+  .sec-link { font-size: 0.58rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--mid); text-decoration: none; transition: color 0.25s; cursor: none; }
+  .sec-link:hover { color: var(--white); }
+
+  .products-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; }
+  .product-card { position: relative; overflow: hidden; background: #0a0a0a; aspect-ratio: 3/4; cursor: none; }
+  .product-card::before {
+    content:''; position:absolute; inset:0;
+    background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, transparent 55%);
+    z-index: 2;
+  }
+  .product-bg {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+  .product-card:hover .product-bg { transform: scale(1.04); }
+  .product-watch-svg { width: 62%; }
+  .product-info {
+    position: absolute; bottom: 0; left: 0; right: 0; padding: 2rem; z-index: 3;
+    transform: translateY(16px); transition: transform 0.35s ease;
+  }
+  .product-card:hover .product-info { transform: translateY(0); }
+  .p-brand { font-size: 0.52rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--mid); margin-bottom: 0.4rem; }
+  .p-name { font-family: 'Cormorant Garamond', serif; font-size: 1.55rem; font-weight: 300; margin-bottom: 0.4rem; }
+  .p-price { font-size: 0.65rem; letter-spacing: 0.18em; color: var(--mid); }
+  .p-tag {
+    position: absolute; top: 1.4rem; right: 1.4rem; z-index: 4;
+    font-size: 0.48rem; letter-spacing: 0.3em; text-transform: uppercase;
+    background: var(--white); color: var(--black); padding: 0.35rem 0.75rem;
+  }
+
+  /* ── FEATURED ── */
+  .featured { padding: 6rem 4rem; background: #080808; }
+  .featured-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
+  .feat-watch-wrap { position: relative; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; }
+  .feat-ring {
+    position: absolute; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .feat-ring:nth-child(1) { width:90%; height:90%; animation: spinR 30s linear infinite; }
+  .feat-ring:nth-child(2) { width:72%; height:72%; animation: spinR 18s linear infinite reverse; }
+  .feat-ring:nth-child(3) { width:112%; height:112%; animation: spinR 50s linear infinite; }
+  @keyframes spinR { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+  .feat-watch-img { position: relative; z-index: 2; width: 65%; filter: drop-shadow(0 15px 60px rgba(255,255,255,0.08)); }
+  .feat-label { font-size: 0.52rem; letter-spacing: 0.5em; text-transform: uppercase; color: var(--mid); margin-bottom: 1.8rem; }
+  .feat-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem,4vw,4rem); font-weight: 300; line-height: 1.1; }
+  .feat-desc { font-size: 0.7rem; line-height: 2.3; color: var(--mid); margin: 1.5rem 0 2rem; }
+  .specs { margin-bottom: 2.5rem; }
+  .spec-row { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 0; border-bottom: 1px solid var(--border); }
+  .spec-k { font-size: 0.58rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--mid); }
+  .spec-v { font-size: 0.68rem; color: var(--white); font-weight: 500; letter-spacing: 0.05em; }
+
+  /* ── LOCATIONS ── */
+  .locations { padding: 6rem 4rem; }
+  .loc-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; margin-top: 3.5rem; background: var(--border); }
+  .loc-card {
+    background: var(--black); padding: 2.8rem 2.2rem;
+    position: relative; overflow: hidden; cursor: none; transition: background 0.35s;
+  }
+  .loc-card::before { content:''; position:absolute; top:0; left:0; width:0; height:2px; background:var(--white); transition:width 0.4s; }
+  .loc-card:hover { background: #0d0d0d; }
+  .loc-card:hover::before { width: 100%; }
+  .loc-num { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; color: rgba(255,255,255,0.06); line-height: 1; margin-bottom: 1.2rem; }
+  .loc-name { font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-weight: 300; margin-bottom: 0.4rem; }
+  .loc-region { font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--mid); }
+
+  /* ── BRANDS ── */
+  .brands { padding: 5rem 4rem; border-top: 1px solid var(--border); }
+  .brands-label { text-align: center; font-size: 0.55rem; letter-spacing: 0.55em; text-transform: uppercase; color: var(--mid); margin-bottom: 3rem; }
+  .brands-row { display: flex; gap: 5rem; justify-content: center; align-items: center; flex-wrap: wrap; }
+  .brand-item {
+    font-family: 'Cormorant Garamond', serif; font-size: 1.6rem;
+    font-weight: 300; letter-spacing: 0.08em; color: var(--mid);
+    transition: color 0.25s; cursor: none; opacity: 0.4;
+  }
+  .brand-item:hover { color: var(--white); opacity: 1; }
+
+  /* ── FOOTER ── */
+  footer { padding: 4rem; border-top: 1px solid var(--border); display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 4rem; }
+  .foot-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; letter-spacing: 0.22em; margin-bottom: 1rem; }
+  .foot-logo em { font-style: italic; color: var(--light); }
+  .foot-desc { font-size: 0.68rem; line-height: 2.1; color: var(--mid); max-width: 28ch; }
+  .foot-col-title { font-size: 0.55rem; letter-spacing: 0.45em; text-transform: uppercase; color: var(--white); margin-bottom: 1.4rem; }
+  .foot-links { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+  .foot-links a { font-size: 0.68rem; color: var(--mid); text-decoration: none; transition: color 0.25s; cursor: none; }
+  .foot-links a:hover { color: var(--white); }
+  .foot-bottom { padding: 1.8rem 4rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .foot-copy { font-size: 0.55rem; letter-spacing: 0.2em; color: var(--mid); text-transform: uppercase; }
+
+  /* ── REVEAL ── */
+  .reveal { opacity: 0; transform: translateY(35px); transition: opacity 0.85s cubic-bezier(0.16,1,0.3,1), transform 0.85s cubic-bezier(0.16,1,0.3,1); }
+  .reveal.on { opacity: 1; transform: translateY(0); }
+  .d1 { transition-delay: 0.1s; } .d2 { transition-delay: 0.2s; } .d3 { transition-delay: 0.3s; } .d4 { transition-delay: 0.4s; }
+
+  @media(max-width:880px){
+    nav { padding: 1.4rem 2rem; }
+    .nav-links { display: none; }
+    .hero-watch { display: none; }
+    .about,.featured-inner { grid-template-columns: 1fr; gap: 3rem; }
+    .products-grid { grid-template-columns: 1fr 1fr; }
+    .loc-grid { grid-template-columns: 1fr 1fr; }
+    footer { grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .about,.collections,.featured,.locations,.brands { padding: 4rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Crosshair cursor — one SVG, moved with JS transform -->
+<div id="cur">
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"
+       style="transition:transform 0.2s ease; transform-origin:center;">
+    <line x1="16" y1="2"  x2="16" y2="12" stroke="white" stroke-width="1.2"/>
+    <line x1="16" y1="20" x2="16" y2="30" stroke="white" stroke-width="1.2"/>
+    <line x1="2"  y1="16" x2="12" y2="16" stroke="white" stroke-width="1.2"/>
+    <line x1="20" y1="16" x2="30" y2="16" stroke="white" stroke-width="1.2"/>
+    <circle cx="16" cy="16" r="3" stroke="white" stroke-width="1"/>
+  </svg>
+</div>
+
+<!-- Loader -->
+<div class="loader" id="loader">
+  <div class="loader-logo">TIME<em style="font-style:italic;color:#999">VAULT</em></div>
+  <div class="loader-line"></div>
+  <div class="loader-sub">Curated Premium Watches</div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">TIME<em>VAULT</em></div>
+  <ul class="nav-links">
+    <li><a href="#collections">Collections</a></li>
+    <li><a href="#featured">Featured</a></li>
+    <li><a href="#locations">Stores</a></li>
+    <li><a href="#brands">Brands</a></li>
+  </ul>
+  <button class="nav-cta">Visit Store</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+
+  <!-- Animated hero watch -->
+  <div class="hero-watch">
+    <div class="watch-float">
+      <svg viewBox="0 0 280 380" xmlns="http://www.w3.org/2000/svg"
+           style="filter:drop-shadow(0 20px 50px rgba(255,255,255,0.07))">
+        <!-- strap top -->
+        <rect x="100" y="8" width="80" height="92" rx="10" fill="#111" stroke="rgba(255,255,255,0.18)" stroke-width="0.8"/>
+        <line x1="113" y1="28" x2="167" y2="28" stroke="rgba(255,255,255,0.1)" stroke-width="0.6"/>
+        <line x1="113" y1="44" x2="167" y2="44" stroke="rgba(255,255,255,0.1)" stroke-width="0.6"/>
+        <line x1="113" y1="60" x2="167" y2="60" stroke="rgba(255,255,255,0.1)" stroke-width="0.6"/>
+        <line x1="113" y1="76" x2="167" y2="76" stroke="rgba(255,255,255,0.1)" stroke-width="0.6"/>
+        <!-- strap bottom -->
+        <rect x="100" y="280" width="80" height="92" rx="10" fill="#111" stroke="rgba(255,255,255,0.18)" stroke-width="0.8"/>
+        <line x1="113" y1="300" x2="167" y2="300" stroke="rgba(255,255,255,0.1)" stroke-width="0.6"/>
+        <line x1="113" y1="316" x2="167" y2="316" stroke="rgba(255,255,255,0.1)" stroke-width="0.6"/>
+        <line x1="113" y1="332" x2="167" y2="332" stroke="rgba(255,255,255,0.1)" stroke-width="0.6"/>
+        <line x1="113" y1="348" x2="167" y2="348" stroke="rgba(255,255,255,0.1)" stroke-width="0.6"/>
+        <!-- case -->
+        <rect x="20" y="92" width="240" height="196" rx="46" fill="#0a0a0a" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
+        <!-- crown -->
+        <rect x="260" y="172" width="17" height="30" rx="4" fill="#111" stroke="rgba(255,255,255,0.2)" stroke-width="0.8"/>
+        <!-- bezel -->
+        <circle cx="140" cy="190" r="89" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="1.5"/>
+        <!-- dial -->
+        <circle cx="140" cy="190" r="80" fill="#050505"/>
+        <circle cx="140" cy="190" r="74" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="5"/>
+        <!-- hour markers -->
+        <g stroke="rgba(255,255,255,0.7)">
+          <line x1="140" y1="115" x2="140" y2="130" stroke-width="2"   transform="rotate(0   140 190)"/>
+          <line x1="140" y1="117" x2="140" y2="127" stroke-width="0.8" transform="rotate(30  140 190)"/>
+          <line x1="140" y1="115" x2="140" y2="130" stroke-width="2"   transform="rotate(60  140 190)"/>
+          <line x1="140" y1="117" x2="140" y2="127" stroke-width="0.8" transform="rotate(90  140 190)"/>
+          <line x1="140" y1="115" x2="140" y2="130" stroke-width="2"   transform="rotate(120 140 190)"/>
+          <line x1="140" y1="117" x2="140" y2="127" stroke-width="0.8" transform="rotate(150 140 190)"/>
+          <line x1="140" y1="115" x2="140" y2="130" stroke-width="2"   transform="rotate(180 140 190)"/>
+          <line x1="140" y1="117" x2="140" y2="127" stroke-width="0.8" transform="rotate(210 140 190)"/>
+          <line x1="140" y1="115" x2="140" y2="130" stroke-width="2"   transform="rotate(240 140 190)"/>
+          <line x1="140" y1="117" x2="140" y2="127" stroke-width="0.8" transform="rotate(270 140 190)"/>
+          <line x1="140" y1="115" x2="140" y2="130" stroke-width="2"   transform="rotate(300 140 190)"/>
+          <line x1="140" y1="117" x2="140" y2="127" stroke-width="0.8" transform="rotate(330 140 190)"/>
+        </g>
+        <!-- text -->
+        <text x="140" y="163" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="9" font-family="Cormorant Garamond,serif" letter-spacing="4">TIME VAULT</text>
+        <text x="140" y="177" text-anchor="middle" fill="rgba(255,255,255,0.25)" font-size="5" font-family="Montserrat,sans-serif" letter-spacing="2">PREMIUM</text>
+        <!-- sub-dial -->
+        <circle cx="140" cy="220" r="15" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.8"/>
+        <!-- hands -->
+        <g id="hHand"><line x1="140" y1="145" x2="140" y2="190" stroke="white" stroke-width="3.5" stroke-linecap="round"/></g>
+        <g id="mHand"><line x1="140" y1="126" x2="140" y2="190" stroke="white" stroke-width="2.2" stroke-linecap="round"/></g>
+        <g id="sHand">
+          <line x1="140" y1="112" x2="140" y2="208" stroke="rgba(255,255,255,0.55)" stroke-width="0.9" stroke-linecap="round"/>
+          <circle cx="140" cy="214" r="2.5" fill="rgba(255,255,255,0.55)"/>
+        </g>
+        <!-- center -->
+        <circle cx="140" cy="190" r="5" fill="white"/>
+        <circle cx="140" cy="190" r="2.2" fill="#050505"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">Est. Kerala — Six Showrooms</div>
+    <h1 class="hero-title">Time Is<br><em>Art</em></h1>
+    <p class="hero-sub">Premium & Semi-Premium Watches, curated for those who know the difference.</p>
+    <div class="hero-actions">
+      <button class="btn-primary">Explore Collection</button>
+      <button class="btn-ghost">Our Story <span class="arr">→</span></button>
+    </div>
+  </div>
+
+  <div class="scroll-cue">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="m-item"><div class="m-dot"></div>Fastrack</div>
+    <div class="m-item"><div class="m-dot"></div>Titan</div>
+    <div class="m-item"><div class="m-dot"></div>Casio</div>
+    <div class="m-item"><div class="m-dot"></div>Wristár</div>
+    <div class="m-item"><div class="m-dot"></div>Koduvally</div>
+    <div class="m-item"><div class="m-dot"></div>Kunnamangalam</div>
+    <div class="m-item"><div class="m-dot"></div>Kannur</div>
+    <div class="m-item"><div class="m-dot"></div>Nilambur</div>
+    <div class="m-item"><div class="m-dot"></div>Tirur</div>
+    <div class="m-item"><div class="m-dot"></div>Sulthan Bathery</div>
+    <div class="m-item"><div class="m-dot"></div>Fastrack</div>
+    <div class="m-item"><div class="m-dot"></div>Titan</div>
+    <div class="m-item"><div class="m-dot"></div>Casio</div>
+    <div class="m-item"><div class="m-dot"></div>Wristár</div>
+    <div class="m-item"><div class="m-dot"></div>Koduvally</div>
+    <div class="m-item"><div class="m-dot"></div>Kunnamangalam</div>
+    <div class="m-item"><div class="m-dot"></div>Kannur</div>
+    <div class="m-item"><div class="m-dot"></div>Nilambur</div>
+    <div class="m-item"><div class="m-dot"></div>Tirur</div>
+    <div class="m-item"><div class="m-dot"></div>Sulthan Bathery</div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about">
+  <div class="reveal">
+    <div class="sec-label">Our Philosophy</div>
+    <h2 class="about-title">Where Time Meets <em>Craftsmanship</em></h2>
+    <p class="about-body">Time Vault was born from a singular obsession — the belief that a fine watch is not merely an instrument, but a statement of character. We curate only what is worthy of your wrist, across six showrooms in Kerala.</p>
+  </div>
+  <div class="stats reveal d2">
+    <div class="stat"><div class="stat-n">6</div><div class="stat-l">Showrooms</div></div>
+    <div class="stat"><div class="stat-n">4+</div><div class="stat-l">Premium Brands</div></div>
+    <div class="stat"><div class="stat-n">500+</div><div class="stat-l">Timepieces</div></div>
+    <div class="stat"><div class="stat-n">∞</div><div class="stat-l">Moments</div></div>
+  </div>
+</section>
+
+<!-- COLLECTIONS -->
+<section class="collections" id="collections">
+  <div class="sec-header reveal">
+    <div>
+      <div class="sec-label">Curated Selection</div>
+      <h2 class="sec-title">New Arrivals</h2>
+    </div>
+    <a href="#" class="sec-link">View All →</a>
+  </div>
+  <div class="products-grid">
+
+    <!-- card 1 -->
+    <div class="product-card reveal">
+      <div class="product-bg" style="background:linear-gradient(135deg,#0d0d0d,#141414)">
+        <svg viewBox="0 0 200 260" class="product-watch-svg" xmlns="http://www.w3.org/2000/svg">
+          <rect x="72" y="2" width="56" height="70" rx="7" fill="#0e0e0e" stroke="rgba(255,255,255,0.12)" stroke-width="0.7"/>
+          <rect x="72" y="188" width="56" height="70" rx="7" fill="#0e0e0e" stroke="rgba(255,255,255,0.12)" stroke-width="0.7"/>
+          <rect x="18" y="65" width="164" height="128" rx="32" fill="#090909" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
+          <circle cx="100" cy="129" r="55" fill="#050505"/>
+          <circle cx="100" cy="129" r="49" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+          <g stroke="rgba(255,255,255,0.6)" stroke-width="1.3">
+            <line x1="100" y1="78" x2="100" y2="90" transform="rotate(0   100 129)"/>
+            <line x1="100" y1="78" x2="100" y2="90" transform="rotate(90  100 129)"/>
+            <line x1="100" y1="78" x2="100" y2="90" transform="rotate(180 100 129)"/>
+            <line x1="100" y1="78" x2="100" y2="90" transform="rotate(270 100 129)"/>
+          </g>
+          <text x="100" y="118" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="7" font-family="Cormorant Garamond,serif" letter-spacing="2">CASIO</text>
+          <text x="100" y="130" text-anchor="middle" fill="rgba(255,255,255,0.28)" font-size="5" font-family="Montserrat,sans-serif" letter-spacing="1">EDIFICE</text>
+          <line x1="100" y1="88" x2="100" y2="129" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="100" y1="96" x2="100" y2="129" stroke="white" stroke-width="2.4" stroke-linecap="round" transform="rotate(55 100 129)"/>
+          <circle cx="100" cy="129" r="3" fill="white"/>
+        </svg>
+      </div>
+      <div class="p-tag">New</div>
+      <div class="product-info">
+        <div class="p-brand">Casio</div>
+        <div class="p-name">Edifice Series</div>
+        <div class="p-price">From ₹4,999</div>
+      </div>
+    </div>
+
+    <!-- card 2 (offset) -->
+    <div class="product-card reveal d2" style="margin-top:3rem">
+      <div class="product-bg" style="background:linear-gradient(135deg,#0a0a0a,#0f0f0f)">
+        <svg viewBox="0 0 200 260" class="product-watch-svg" xmlns="http://www.w3.org/2000/svg">
+          <rect x="68" y="2" width="64" height="70" rx="7" fill="#0e0e0e" stroke="rgba(255,255,255,0.12)" stroke-width="0.7"/>
+          <rect x="68" y="188" width="64" height="70" rx="7" fill="#0e0e0e" stroke="rgba(255,255,255,0.12)" stroke-width="0.7"/>
+          <rect x="14" y="65" width="172" height="128" rx="8" fill="#090909" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
+          <rect x="24" y="74" width="152" height="110" rx="3" fill="#050505"/>
+          <rect x="32" y="80" width="136" height="18" rx="2" fill="#0d0d0d"/>
+          <text x="100" y="93" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="6" font-family="Montserrat,sans-serif" letter-spacing="2">00:00:00</text>
+          <rect x="32" y="104" width="136" height="64" rx="2" fill="#080808"/>
+          <text x="100" y="140" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-size="22" font-family="Cormorant Garamond,serif">10:09</text>
+          <text x="100" y="157" text-anchor="middle" fill="rgba(255,255,255,0.25)" font-size="5" font-family="Montserrat,sans-serif" letter-spacing="2">G-SHOCK</text>
+        </svg>
+      </div>
+      <div class="p-tag">New</div>
+      <div class="product-info">
+        <div class="p-brand">Casio</div>
+        <div class="p-name">G-Shock Digital</div>
+        <div class="p-price">From ₹3,499</div>
+      </div>
+    </div>
+
+    <!-- card 3 -->
+    <div class="product-card reveal d3">
+      <div class="product-bg" style="background:linear-gradient(135deg,#0c0c0c,#111)">
+        <svg viewBox="0 0 200 260" class="product-watch-svg" xmlns="http://www.w3.org/2000/svg">
+          <rect x="68" y="2" width="64" height="70" rx="7" fill="#111" stroke="rgba(255,255,255,0.12)" stroke-width="0.7"/>
+          <rect x="68" y="188" width="64" height="70" rx="7" fill="#111" stroke="rgba(255,255,255,0.12)" stroke-width="0.7"/>
+          <rect x="14" y="60" width="172" height="140" rx="36" fill="#0a0a0a" stroke="rgba(255,255,255,0.2)" stroke-width="1.4"/>
+          <circle cx="100" cy="130" r="62" fill="#050505"/>
+          <circle cx="100" cy="130" r="54" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="0.5" stroke-dasharray="2,5"/>
+          <g stroke="rgba(255,255,255,0.6)" stroke-width="1.3">
+            <line x1="100" y1="72" x2="100" y2="86" transform="rotate(0   100 130)"/>
+            <line x1="100" y1="72" x2="100" y2="86" transform="rotate(90  100 130)"/>
+            <line x1="100" y1="72" x2="100" y2="86" transform="rotate(180 100 130)"/>
+            <line x1="100" y1="72" x2="100" y2="86" transform="rotate(270 100 130)"/>
+          </g>
+          <text x="100" y="116" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="8" font-family="Cormorant Garamond,serif" letter-spacing="2">TITAN</text>
+          <text x="100" y="129" text-anchor="middle" fill="rgba(255,255,255,0.28)" font-size="4.5" font-family="Montserrat,sans-serif" letter-spacing="1.5">RAGA</text>
+          <line x1="100" y1="82" x2="100" y2="130" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="100" y1="90" x2="100" y2="130" stroke="white" stroke-width="2.6" stroke-linecap="round" transform="rotate(-70 100 130)"/>
+          <line x1="100" y1="72" x2="100" y2="145" stroke="rgba(255,255,255,0.4)" stroke-width="0.9" stroke-linecap="round" transform="rotate(140 100 130)"/>
+          <circle cx="100" cy="130" r="3.5" fill="white"/>
+        </svg>
+      </div>
+      <div class="product-info">
+        <div class="p-brand">Titan</div>
+        <div class="p-name">Raga Collection</div>
+        <div class="p-price">From ₹6,999</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED -->
+<section class="featured" id="featured">
+  <div class="featured-inner">
+    <div class="reveal">
+      <div class="feat-watch-wrap">
+        <div class="feat-ring"></div>
+        <div class="feat-ring"></div>
+        <div class="feat-ring"></div>
+        <svg class="feat-watch-img" viewBox="0 0 280 380" xmlns="http://www.w3.org/2000/svg">
+          <rect x="100" y="8" width="80" height="92" rx="10" fill="#111" stroke="rgba(255,255,255,0.18)" stroke-width="0.8"/>
+          <rect x="100" y="280" width="80" height="92" rx="10" fill="#111" stroke="rgba(255,255,255,0.18)" stroke-width="0.8"/>
+          <rect x="20" y="92" width="240" height="196" rx="46" fill="#090909" stroke="rgba(255,255,255,0.22)" stroke-width="1.8"/>
+          <rect x="260" y="172" width="17" height="30" rx="4" fill="#111" stroke="rgba(255,255,255,0.2)" stroke-width="0.8"/>
+          <circle cx="140" cy="190" r="89" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="2"/>
+          <circle cx="140" cy="190" r="80" fill="#040404"/>
+          <circle cx="140" cy="190" r="74" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="5"/>
+          <g stroke="rgba(255,255,255,0.7)">
+            <line x1="140" y1="115" x2="140" y2="130" stroke-width="2"   transform="rotate(0   140 190)"/>
+            <line x1="140" y1="117" x2="140" y2="127" stroke-width="0.8" transform="rotate(30  140 190)"/>
+            <line x1="140" y1="115" x2="140" y2="130" stroke-width="2"   transform="rotate(60  140 190)"/>
+            <line x1="140" y1="117" x2="140" y2="127" stroke-width="0.8" transform="rotate(90  140 190)"/>
+            <line x1="140" y1="115" x2="140" y2="130" stroke-width="2"   transform="rotate(120 140 190)"/>
+            <line x1="140" y1="117" x2="140" y2="127" stroke-width="0.8" transform="rotate(150 140 190)"/>
+            <line x1="140" y1="115" x2="140" y2="130" stroke-width="2"   transform="rotate(180 140 190)"/>
+            <line x1="140" y1="117" x2="140" y2="127" stroke-width="0.8" transform="rotate(210 140 190)"/>
+            <line x1="140" y1="115" x2="140" y2="130" stroke-width="2"   transform="rotate(240 140 190)"/>
+            <line x1="140" y1="117" x2="140" y2="127" stroke-width="0.8" transform="rotate(270 140 190)"/>
+            <line x1="140" y1="115" x2="140" y2="130" stroke-width="2"   transform="rotate(300 140 190)"/>
+            <line x1="140" y1="117" x2="140" y2="127" stroke-width="0.8" transform="rotate(330 140 190)"/>
+          </g>
+          <text x="140" y="163" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="10" font-family="Cormorant Garamond,serif" letter-spacing="4">TIME VAULT</text>
+          <text x="140" y="178" text-anchor="middle" fill="rgba(255,255,255,0.22)" font-size="5.5" font-family="Montserrat,sans-serif" letter-spacing="2">SIGNATURE</text>
+          <circle cx="140" cy="220" r="16" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.8"/>
+          <line x1="140" y1="128" x2="140" y2="190" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="140" y1="140" x2="140" y2="190" stroke="white" stroke-width="3.5" stroke-linecap="round" transform="rotate(110 140 190)"/>
+          <line x1="140" y1="114" x2="140" y2="210" stroke="rgba(255,255,255,0.45)" stroke-width="0.9" stroke-linecap="round" transform="rotate(195 140 190)"/>
+          <circle cx="140" cy="190" r="5" fill="white"/>
+          <circle cx="140" cy="190" r="2.2" fill="#040404"/>
+        </svg>
+      </div>
+    </div>
+    <div class="reveal d2">
+      <div class="feat-label">Editor's Pick</div>
+      <h2 class="feat-title">The Signature<br>Timepiece</h2>
+      <p class="feat-desc">Our flagship curated collection represents the pinnacle of precision engineering and timeless design. Each piece hand-selected for those who wear intention on their wrist.</p>
+      <div class="specs">
+        <div class="spec-row"><span class="spec-k">Movement</span><span class="spec-v">Japanese Quartz</span></div>
+        <div class="spec-row"><span class="spec-k">Case Material</span><span class="spec-v">Stainless Steel</span></div>
+        <div class="spec-row"><span class="spec-k">Water Resistance</span><span class="spec-v">50 Metres</span></div>
+        <div class="spec-row"><span class="spec-k">Warranty</span><span class="spec-v">2 Years</span></div>
+      </div>
+      <button class="btn-primary">Enquire Now</button>
+    </div>
+  </div>
+</section>
+
+<!-- LOCATIONS -->
+<section class="locations" id="locations">
+  <div class="sec-header reveal">
+    <div>
+      <div class="sec-label">Find Us</div>
+      <h2 class="sec-title">Our Showrooms</h2>
+    </div>
+  </div>
+  <div class="loc-grid">
+    <div class="loc-card reveal">   <div class="loc-num">01</div><div class="loc-name">Koduvally</div>    <div class="loc-region">Calicut District</div></div>
+    <div class="loc-card reveal d1"><div class="loc-num">02</div><div class="loc-name">Kunnamangalam</div><div class="loc-region">Calicut District</div></div>
+    <div class="loc-card reveal d2"><div class="loc-num">03</div><div class="loc-name">Kannur</div>       <div class="loc-region">Kannur District</div></div>
+    <div class="loc-card reveal d3"><div class="loc-num">04</div><div class="loc-name">Nilambur</div>     <div class="loc-region">Malappuram District</div></div>
+    <div class="loc-card reveal d4"><div class="loc-num">05</div><div class="loc-name">Tirur</div>        <div class="loc-region">Malappuram District</div></div>
+    <div class="loc-card reveal d4"><div class="loc-num">06</div><div class="loc-name">Sulthan Bathery</div><div class="loc-region">Wayanad District</div></div>
+  </div>
+</section>
+
+<!-- BRANDS -->
+<section class="brands" id="brands">
+  <div class="brands-label reveal">Our Brand Partners</div>
+  <div class="brands-row reveal d2">
+    <div class="brand-item">Fastrack</div>
+    <div class="brand-item" style="font-size:2.2rem">Titan</div>
+    <div class="brand-item" style="font-size:2rem;letter-spacing:0.04em">CASIO</div>
+    <div class="brand-item">Wristár</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="foot-logo">TIME<em>VAULT</em></div>
+    <p class="foot-desc">Curated Premium & Semi-Premium Watches across six showrooms in Kerala.</p>
+  </div>
+  <div>
+    <div class="foot-col-title">Collections</div>
+    <ul class="foot-links">
+      <li><a href="#">New Arrivals</a></li>
+      <li><a href="#">Casio</a></li>
+      <li><a href="#">Titan</a></li>
+      <li><a href="#">Fastrack</a></li>
+    </ul>
+  </div>
+  <div>
+    <div class="foot-col-title">Company</div>
+    <ul class="foot-links">
+      <li><a href="#">About Us</a></li>
+      <li><a href="#">Our Story</a></li>
+      <li><a href="#">Careers</a></li>
+    </ul>
+  </div>
+  <div>
+    <div class="foot-col-title">Contact</div>
+    <ul class="foot-links">
+      <li><a href="#">Instagram</a></li>
+      <li><a href="#">WhatsApp</a></li>
+      <li><a href="#">Locations</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="foot-bottom">
+  <div class="foot-copy">© 2026 Time Vault. All Rights Reserved.</div>
+  <div class="foot-copy">Curated Excellence — Kerala</div>
+</div>
+
+<script>
+  // ── CURSOR: single RAF loop, no setTimeout lag ──
+  const cur = document.getElementById('cur');
+  let mx = -50, my = -50;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
+  (function loop() {
+    cur.style.transform = `translate(${mx - 16}px,${my - 16}px)`;
+    requestAnimationFrame(loop);
+  })();
+
+  // ── LOADER ──
+  setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 3200);
+
+  // ── LIVE WATCH HANDS ──
+  function tick() {
+    const now = new Date();
+    const s = now.getSeconds() + now.getMilliseconds() / 1000;
+    const m = now.getMinutes() + s / 60;
+    const h = (now.getHours() % 12) + m / 60;
+    const cx = 140, cy = 190;
+    const set = (id, deg) => {
+      const el = document.getElementById(id);
+      if (el) el.setAttribute('transform', `rotate(${deg} ${cx} ${cy})`);
+    };
+    set('sHand', s * 6);
+    set('mHand', m * 6);
+    set('hHand', h * 30);
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  // ── SCROLL REVEAL ──
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(r => obs.observe(r));
+</script>
+</body>
+</html>
