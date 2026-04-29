@@ -6,311 +6,373 @@
 <title>TIME VAULT — Curated Premium Watches</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --white: #ffffff;
-    --off-white: #f2f2f2;
-    --light: #cccccc;
-    --mid: #888888;
-    --dark: #222222;
-    --darker: #111111;
-    --black: #000000;
-    --border: rgba(255,255,255,0.12);
-    --border-strong: rgba(255,255,255,0.25);
-  }
+:root{
+  --w:#fff;--ow:#f2f2f2;--light:#ccc;--mid:#888;--dark:#222;
+  --darker:#111;--blk:#000;--bdr:rgba(255,255,255,0.12);--bdr2:rgba(255,255,255,0.25);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--blk);color:var(--w);font-family:'Montserrat',sans-serif;overflow-x:hidden;cursor:none}
 
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body {
-    background: var(--black);
-    color: var(--white);
-    font-family: 'Montserrat', sans-serif;
-    overflow-x: hidden;
-    cursor: none;
-  }
+/* CURSOR */
+#cur{position:fixed;pointer-events:none;z-index:9999;top:0;left:0;will-change:transform}
+#cur svg{display:block;transition:transform .2s ease}
 
-  /* ── CURSOR ── */
-  #cur {
-    position: fixed;
-    pointer-events: none;
-    z-index: 9999;
-    top: 0; left: 0;
-    will-change: transform;
-  }
-  #cur svg { display: block; }
-  body:has(a:hover) #cur svg,
-  body:has(button:hover) #cur svg,
-  body:has(.product-card:hover) #cur svg,
-  body:has(.location-card:hover) #cur svg { transform: scale(1.4); }
+/* LOADER */
+.loader{position:fixed;inset:0;background:var(--blk);z-index:9000;display:flex;align-items:center;justify-content:center;flex-direction:column;animation:loaderOut .5s ease 2.6s forwards}
+.loader-logo{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;letter-spacing:.45em;opacity:0;animation:fadeUp .8s ease .3s forwards}
+.loader-line{width:0;height:1px;background:linear-gradient(90deg,transparent,#fff,transparent);animation:lineGrow 1s ease .9s forwards;margin-top:1.2rem}
+.loader-sub{font-size:.55rem;letter-spacing:.55em;color:var(--mid);opacity:0;margin-top:1rem;text-transform:uppercase;animation:fadeUp .6s ease 1.6s forwards}
+@keyframes loaderOut{to{opacity:0;pointer-events:none}}
+@keyframes lineGrow{to{width:180px}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
-  /* ── LOADER ── */
-  .loader {
-    position: fixed; inset: 0; background: var(--black);
-    z-index: 9000; display: flex; align-items: center; justify-content: center; flex-direction: column;
-    animation: loaderOut 0.5s ease 2.6s forwards;
-  }
-  .loader-logo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 3rem; font-weight: 300; letter-spacing: 0.45em;
-    color: var(--white); opacity: 0;
-    animation: fadeUp 0.8s ease 0.3s forwards;
-  }
-  .loader-line {
-    width: 0; height: 1px;
-    background: linear-gradient(90deg, transparent, #fff, transparent);
-    animation: lineGrow 1s ease 0.9s forwards;
-    margin-top: 1.2rem;
-  }
-  .loader-sub {
-    font-size: 0.55rem; letter-spacing: 0.55em; color: var(--mid);
-    opacity: 0; margin-top: 1rem; text-transform: uppercase;
-    animation: fadeUp 0.6s ease 1.6s forwards;
-  }
-  @keyframes loaderOut { to { opacity: 0; pointer-events: none; } }
-  @keyframes lineGrow  { to { width: 180px; } }
-  @keyframes fadeUp    { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:1.6rem 4rem;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(to bottom,rgba(0,0,0,.96),transparent)}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.5rem;letter-spacing:.3em;font-weight:300;cursor:none}
+.nav-logo em{font-style:italic;color:var(--light)}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:var(--mid);text-decoration:none;transition:color .25s;position:relative;cursor:none}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:#fff;transition:width .25s}
+.nav-links a:hover{color:var(--w)}
+.nav-links a:hover::after{width:100%}
+.nav-right{display:flex;align-items:center;gap:1rem}
+.cart-btn{background:none;border:none;color:var(--mid);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;cursor:none;transition:color .25s;font-family:'Montserrat',sans-serif;display:flex;align-items:center;gap:.5rem;padding:.5rem}
+.cart-btn:hover{color:var(--w)}
+.cart-count{background:var(--w);color:var(--blk);border-radius:50%;width:18px;height:18px;font-size:.5rem;display:flex;align-items:center;justify-content:center;font-weight:600}
+.nav-cta{font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--w);border:1px solid rgba(255,255,255,.4);padding:.65rem 1.8rem;cursor:none;transition:all .25s;background:transparent;font-family:'Montserrat',sans-serif}
+.nav-cta:hover,.nav-cta.active{background:var(--w);color:var(--blk);border-color:var(--w)}
+.nav-admin{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);cursor:none;transition:color .25s;background:none;border:1px solid rgba(255,255,255,.15);padding:.5rem 1.2rem;font-family:'Montserrat',sans-serif}
+.nav-admin:hover{color:var(--w);border-color:rgba(255,255,255,.4)}
 
-  /* ── NAV ── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    padding: 2rem 4rem;
-    display: flex; align-items: center; justify-content: space-between;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.96), transparent);
-  }
-  .nav-logo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.5rem; letter-spacing: 0.3em; font-weight: 300;
-  }
-  .nav-logo em { font-style: italic; color: var(--light); }
-  .nav-links { display: flex; gap: 3rem; list-style: none; }
-  .nav-links a {
-    font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase;
-    color: var(--mid); text-decoration: none; transition: color 0.25s; position: relative;
-  }
-  .nav-links a::after {
-    content:''; position:absolute; bottom:-4px; left:0;
-    width:0; height:1px; background:#fff; transition: width 0.25s;
-  }
-  .nav-links a:hover { color: var(--white); }
-  .nav-links a:hover::after { width: 100%; }
-  .nav-cta {
-    font-size: 0.6rem; letter-spacing: 0.22em; text-transform: uppercase;
-    color: var(--white); border: 1px solid rgba(255,255,255,0.4);
-    padding: 0.65rem 1.8rem; cursor: none; transition: all 0.25s;
-    background: transparent; font-family: 'Montserrat', sans-serif;
-  }
-  .nav-cta:hover { background: var(--white); color: var(--black); border-color: var(--white); }
+/* PAGE SYSTEM */
+.page{display:none}
+.page.active{display:block}
+#page-admin.active .admin-page{display:grid}
 
-  /* ── HERO ── */
-  .hero {
-    height: 100vh; display: flex; align-items: center; justify-content: center;
-    position: relative; overflow: hidden;
-  }
-  .hero-grid {
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-    background-size: 80px 80px;
-    mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
-  }
-  .hero-content {
-    text-align: center; position: relative; z-index: 2;
-    opacity: 0; animation: fadeUp 1s ease 2.9s forwards;
-  }
-  .hero-eyebrow {
-    font-size: 0.58rem; letter-spacing: 0.6em; text-transform: uppercase;
-    color: var(--mid); margin-bottom: 2rem;
-  }
-  .hero-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(4.5rem, 10vw, 9.5rem);
-    font-weight: 300; line-height: 0.88;
-  }
-  .hero-title em { font-style: italic; color: var(--light); }
-  .hero-sub {
-    margin-top: 2.5rem;
-    font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase;
-    color: var(--mid); max-width: 38ch; margin-left: auto; margin-right: auto; line-height: 2.2;
-  }
-  .hero-actions { margin-top: 3.5rem; display: flex; gap: 1.5rem; justify-content: center; align-items: center; }
-  .btn-primary {
-    font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase;
-    color: var(--black); background: var(--white);
-    padding: 1rem 2.8rem; cursor: none; border: none;
-    font-family: 'Montserrat', sans-serif;
-    transition: background 0.25s, color 0.25s;
-    position: relative; overflow: hidden;
-  }
-  .btn-primary:hover { background: var(--light); }
-  .btn-ghost {
-    font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase;
-    color: var(--mid); background: transparent;
-    padding: 1rem 1.5rem; cursor: none; border: none;
-    font-family: 'Montserrat', sans-serif; transition: color 0.25s;
-    display: flex; align-items: center; gap: 0.7rem;
-  }
-  .btn-ghost:hover { color: var(--white); }
-  .btn-ghost .arr { transition: transform 0.25s; display: inline-block; }
-  .btn-ghost:hover .arr { transform: translateX(5px); }
+/* ═══════════════ HOME PAGE ═══════════════ */
+.hero{height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse at center,black 20%,transparent 75%)}
+.hero-content{text-align:center;position:relative;z-index:2;opacity:0;animation:fadeUp 1s ease 2.9s forwards}
+.hero-eyebrow{font-size:.58rem;letter-spacing:.6em;text-transform:uppercase;color:var(--mid);margin-bottom:2rem}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(4.5rem,10vw,9.5rem);font-weight:300;line-height:.88}
+.hero-title em{font-style:italic;color:var(--light)}
+.hero-sub{margin-top:2.5rem;font-size:.65rem;letter-spacing:.3em;text-transform:uppercase;color:var(--mid);max-width:38ch;margin-left:auto;margin-right:auto;line-height:2.2}
+.hero-actions{margin-top:3.5rem;display:flex;gap:1.5rem;justify-content:center;align-items:center}
+.btn-primary{font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:var(--blk);background:var(--w);padding:1rem 2.8rem;cursor:none;border:none;font-family:'Montserrat',sans-serif;transition:background .25s}
+.btn-primary:hover{background:var(--light)}
+.btn-ghost{font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:var(--mid);background:transparent;padding:1rem 1.5rem;cursor:none;border:none;font-family:'Montserrat',sans-serif;transition:color .25s;display:flex;align-items:center;gap:.7rem}
+.btn-ghost:hover{color:var(--w)}
+.btn-ghost .arr{transition:transform .25s;display:inline-block}
+.btn-ghost:hover .arr{transform:translateX(5px)}
+.hero-watch{position:absolute;right:7%;top:50%;width:250px;opacity:0;animation:watchIn 1s ease 3.2s forwards;transform:translateY(-50%) translateX(30px)}
+@keyframes watchIn{to{opacity:1;transform:translateY(-50%) translateX(0)}}
+.watch-float{animation:floatY 7s ease-in-out infinite}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.scroll-cue{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.8rem;opacity:0;animation:fadeUp .8s ease 3.4s forwards}
+.scroll-cue span{font-size:.5rem;letter-spacing:.45em;color:var(--mid);text-transform:uppercase}
+.scroll-line{width:1px;height:55px;background:linear-gradient(to bottom,#fff,transparent);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.2}50%{opacity:.8}}
 
-  /* Hero watch */
-  .hero-watch {
-    position: absolute; right: 7%; top: 50%;
-    width: 250px;
-    opacity: 0; animation: watchIn 1s ease 3.2s forwards;
-    transform: translateY(-50%) translateX(30px);
-  }
-  @keyframes watchIn { to { opacity: 1; transform: translateY(-50%) translateX(0); } }
-  .watch-float { animation: floatY 7s ease-in-out infinite; }
-  @keyframes floatY { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+/* MARQUEE */
+.marquee-wrap{overflow:hidden;border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr);padding:1.6rem 0}
+.marquee-track{display:flex;gap:3.5rem;animation:marquee 22s linear infinite;white-space:nowrap}
+.m-item{font-size:.58rem;letter-spacing:.45em;text-transform:uppercase;color:var(--mid);flex-shrink:0;display:flex;align-items:center;gap:1.2rem}
+.m-dot{width:3px;height:3px;background:var(--mid);border-radius:50%;flex-shrink:0}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-  /* Scroll cue */
-  .scroll-cue {
-    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
-    display: flex; flex-direction: column; align-items: center; gap: 0.8rem;
-    opacity: 0; animation: fadeUp 0.8s ease 3.4s forwards;
-  }
-  .scroll-cue span { font-size: 0.5rem; letter-spacing: 0.45em; color: var(--mid); text-transform: uppercase; }
-  .scroll-line {
-    width: 1px; height: 55px;
-    background: linear-gradient(to bottom, #fff, transparent);
-    animation: pulse 2s ease-in-out infinite;
-  }
-  @keyframes pulse { 0%,100%{opacity:0.2} 50%{opacity:0.8} }
+/* ABOUT */
+.about{padding:8rem 4rem;display:grid;grid-template-columns:1fr 1fr;gap:8rem;align-items:center}
+.sec-label{font-size:.58rem;letter-spacing:.5em;text-transform:uppercase;color:var(--mid);margin-bottom:1.8rem}
+.about-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:300;line-height:1.1}
+.about-title em{font-style:italic;color:var(--light)}
+.about-body{font-size:.72rem;line-height:2.3;color:var(--mid);margin-top:1.8rem}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+.stat{border-left:1px solid var(--bdr2);padding-left:1.5rem}
+.stat-n{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;line-height:1}
+.stat-l{font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;color:var(--mid);margin-top:.4rem}
 
-  /* ── MARQUEE ── */
-  .marquee-wrap { overflow: hidden; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 1.6rem 0; }
-  .marquee-track { display: flex; gap: 3.5rem; animation: marquee 22s linear infinite; white-space: nowrap; }
-  .m-item { font-size: 0.58rem; letter-spacing: 0.45em; text-transform: uppercase; color: var(--mid); flex-shrink: 0; display: flex; align-items: center; gap: 1.2rem; }
-  .m-dot { width: 3px; height: 3px; background: var(--mid); border-radius: 50%; flex-shrink: 0; }
-  @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+/* FEATURED */
+.featured{padding:6rem 4rem;background:#080808}
+.featured-inner{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center}
+.feat-watch-wrap{position:relative;aspect-ratio:1;display:flex;align-items:center;justify-content:center}
+.feat-ring{position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.08)}
+.feat-ring:nth-child(1){width:90%;height:90%;animation:spinR 30s linear infinite}
+.feat-ring:nth-child(2){width:72%;height:72%;animation:spinR 18s linear infinite reverse}
+.feat-ring:nth-child(3){width:112%;height:112%;animation:spinR 50s linear infinite}
+@keyframes spinR{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.feat-watch-img{position:relative;z-index:2;width:65%;filter:drop-shadow(0 15px 60px rgba(255,255,255,.08))}
+.feat-label{font-size:.52rem;letter-spacing:.5em;text-transform:uppercase;color:var(--mid);margin-bottom:1.8rem}
+.feat-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,4vw,4rem);font-weight:300;line-height:1.1}
+.feat-desc{font-size:.7rem;line-height:2.3;color:var(--mid);margin:1.5rem 0 2rem}
+.specs{margin-bottom:2.5rem}
+.spec-row{display:flex;justify-content:space-between;align-items:center;padding:.9rem 0;border-bottom:1px solid var(--bdr)}
+.spec-k{font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;color:var(--mid)}
+.spec-v{font-size:.68rem;font-weight:500;letter-spacing:.05em}
 
-  /* ── ABOUT ── */
-  .about { padding: 8rem 4rem; display: grid; grid-template-columns: 1fr 1fr; gap: 8rem; align-items: center; }
-  .sec-label { font-size: 0.58rem; letter-spacing: 0.5em; text-transform: uppercase; color: var(--mid); margin-bottom: 1.8rem; }
-  .about-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.4rem,5vw,4rem); font-weight: 300; line-height: 1.1; }
-  .about-title em { font-style: italic; color: var(--light); }
-  .about-body { font-size: 0.72rem; line-height: 2.3; color: var(--mid); margin-top: 1.8rem; }
-  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-  .stat { border-left: 1px solid var(--border-strong); padding-left: 1.5rem; }
-  .stat-n { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 300; color: var(--white); line-height: 1; }
-  .stat-l { font-size: 0.58rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--mid); margin-top: 0.4rem; }
+/* LOCATIONS */
+.locations{padding:6rem 4rem}
+.sec-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:3.5rem}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.5rem);font-weight:300}
+.sec-link{font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;color:var(--mid);text-decoration:none;transition:color .25s;cursor:none}
+.sec-link:hover{color:var(--w)}
+.loc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--bdr)}
+.loc-card{background:var(--blk);padding:2.8rem 2.2rem;position:relative;overflow:hidden;cursor:none;transition:background .35s}
+.loc-card::before{content:'';position:absolute;top:0;left:0;width:0;height:2px;background:var(--w);transition:width .4s}
+.loc-card:hover{background:#0d0d0d}
+.loc-card:hover::before{width:100%}
+.loc-num{font-family:'Cormorant Garamond',serif;font-size:3.5rem;font-weight:300;color:rgba(255,255,255,.06);line-height:1;margin-bottom:1.2rem}
+.loc-name{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:300;margin-bottom:.4rem}
+.loc-region{font-size:.55rem;letter-spacing:.3em;text-transform:uppercase;color:var(--mid)}
 
-  /* ── COLLECTIONS ── */
-  .collections { padding: 6rem 4rem; }
-  .sec-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 3.5rem; }
-  .sec-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem,4vw,3.5rem); font-weight: 300; }
-  .sec-link { font-size: 0.58rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--mid); text-decoration: none; transition: color 0.25s; cursor: none; }
-  .sec-link:hover { color: var(--white); }
+/* BRANDS */
+.brands{padding:5rem 4rem;border-top:1px solid var(--bdr)}
+.brands-label{text-align:center;font-size:.55rem;letter-spacing:.55em;text-transform:uppercase;color:var(--mid);margin-bottom:3rem}
+.brands-row{display:flex;gap:5rem;justify-content:center;align-items:center;flex-wrap:wrap}
+.brand-item{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;letter-spacing:.08em;color:var(--mid);transition:color .25s;cursor:none;opacity:.4}
+.brand-item:hover{color:var(--w);opacity:1}
 
-  .products-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; }
-  .product-card { position: relative; overflow: hidden; background: #0a0a0a; aspect-ratio: 3/4; cursor: none; }
-  .product-card::before {
-    content:''; position:absolute; inset:0;
-    background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, transparent 55%);
-    z-index: 2;
-  }
-  .product-bg {
-    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-    transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
-  }
-  .product-card:hover .product-bg { transform: scale(1.04); }
-  .product-watch-svg { width: 62%; }
-  .product-info {
-    position: absolute; bottom: 0; left: 0; right: 0; padding: 2rem; z-index: 3;
-    transform: translateY(16px); transition: transform 0.35s ease;
-  }
-  .product-card:hover .product-info { transform: translateY(0); }
-  .p-brand { font-size: 0.52rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--mid); margin-bottom: 0.4rem; }
-  .p-name { font-family: 'Cormorant Garamond', serif; font-size: 1.55rem; font-weight: 300; margin-bottom: 0.4rem; }
-  .p-price { font-size: 0.65rem; letter-spacing: 0.18em; color: var(--mid); }
-  .p-tag {
-    position: absolute; top: 1.4rem; right: 1.4rem; z-index: 4;
-    font-size: 0.48rem; letter-spacing: 0.3em; text-transform: uppercase;
-    background: var(--white); color: var(--black); padding: 0.35rem 0.75rem;
-  }
+/* FOOTER */
+footer{padding:4rem;border-top:1px solid var(--bdr);display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:4rem}
+.foot-logo{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;letter-spacing:.22em;margin-bottom:1rem}
+.foot-logo em{font-style:italic;color:var(--light)}
+.foot-desc{font-size:.68rem;line-height:2.1;color:var(--mid);max-width:28ch}
+.foot-col-title{font-size:.55rem;letter-spacing:.45em;text-transform:uppercase;margin-bottom:1.4rem}
+.foot-links{list-style:none;display:flex;flex-direction:column;gap:.75rem}
+.foot-links a{font-size:.68rem;color:var(--mid);text-decoration:none;transition:color .25s;cursor:none}
+.foot-links a:hover{color:var(--w)}
+.foot-bottom{padding:1.8rem 4rem;border-top:1px solid var(--bdr);display:flex;justify-content:space-between}
+.foot-copy{font-size:.55rem;letter-spacing:.2em;color:var(--mid);text-transform:uppercase}
 
-  /* ── FEATURED ── */
-  .featured { padding: 6rem 4rem; background: #080808; }
-  .featured-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
-  .feat-watch-wrap { position: relative; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; }
-  .feat-ring {
-    position: absolute; border-radius: 50%;
-    border: 1px solid rgba(255,255,255,0.08);
-  }
-  .feat-ring:nth-child(1) { width:90%; height:90%; animation: spinR 30s linear infinite; }
-  .feat-ring:nth-child(2) { width:72%; height:72%; animation: spinR 18s linear infinite reverse; }
-  .feat-ring:nth-child(3) { width:112%; height:112%; animation: spinR 50s linear infinite; }
-  @keyframes spinR { from{transform:rotate(0)} to{transform:rotate(360deg)} }
-  .feat-watch-img { position: relative; z-index: 2; width: 65%; filter: drop-shadow(0 15px 60px rgba(255,255,255,0.08)); }
-  .feat-label { font-size: 0.52rem; letter-spacing: 0.5em; text-transform: uppercase; color: var(--mid); margin-bottom: 1.8rem; }
-  .feat-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem,4vw,4rem); font-weight: 300; line-height: 1.1; }
-  .feat-desc { font-size: 0.7rem; line-height: 2.3; color: var(--mid); margin: 1.5rem 0 2rem; }
-  .specs { margin-bottom: 2.5rem; }
-  .spec-row { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 0; border-bottom: 1px solid var(--border); }
-  .spec-k { font-size: 0.58rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--mid); }
-  .spec-v { font-size: 0.68rem; color: var(--white); font-weight: 500; letter-spacing: 0.05em; }
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(35px);transition:opacity .85s cubic-bezier(.16,1,.3,1),transform .85s cubic-bezier(.16,1,.3,1)}
+.reveal.on{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
 
-  /* ── LOCATIONS ── */
-  .locations { padding: 6rem 4rem; }
-  .loc-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; margin-top: 3.5rem; background: var(--border); }
-  .loc-card {
-    background: var(--black); padding: 2.8rem 2.2rem;
-    position: relative; overflow: hidden; cursor: none; transition: background 0.35s;
-  }
-  .loc-card::before { content:''; position:absolute; top:0; left:0; width:0; height:2px; background:var(--white); transition:width 0.4s; }
-  .loc-card:hover { background: #0d0d0d; }
-  .loc-card:hover::before { width: 100%; }
-  .loc-num { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; color: rgba(255,255,255,0.06); line-height: 1; margin-bottom: 1.2rem; }
-  .loc-name { font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-weight: 300; margin-bottom: 0.4rem; }
-  .loc-region { font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--mid); }
+/* ═══════════════ SHOP PAGE ═══════════════ */
+.shop-page{padding:8rem 4rem 5rem}
+.shop-header{margin-bottom:4rem;border-bottom:1px solid var(--bdr);padding-bottom:3rem}
+.shop-title{font-family:'Cormorant Garamond',serif;font-size:4rem;font-weight:300}
+.shop-sub{font-size:.65rem;letter-spacing:.3em;text-transform:uppercase;color:var(--mid);margin-top:.8rem}
+.shop-filters{display:flex;gap:1rem;margin-top:2rem;flex-wrap:wrap}
+.filter-btn{font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;border:1px solid var(--bdr);color:var(--mid);background:none;padding:.55rem 1.4rem;cursor:none;transition:all .25s;font-family:'Montserrat',sans-serif}
+.filter-btn:hover,.filter-btn.active{background:var(--w);color:var(--blk);border-color:var(--w)}
+.shop-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
+.shop-card{background:#0a0a0a;position:relative;cursor:none;overflow:hidden;transition:background .3s}
+.shop-card:hover{background:#111}
+.shop-card-img{aspect-ratio:1;display:flex;align-items:center;justify-content:center;padding:2rem;border-bottom:1px solid var(--bdr)}
+.shop-card-img svg{width:80%;transition:transform .5s ease}
+.shop-card:hover .shop-card-img svg{transform:scale(1.05)}
+.shop-card-info{padding:1.5rem}
+.shop-card-brand{font-size:.5rem;letter-spacing:.4em;text-transform:uppercase;color:var(--mid);margin-bottom:.4rem}
+.shop-card-name{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:300;margin-bottom:.4rem}
+.shop-card-price{font-size:.65rem;letter-spacing:.15em;margin-bottom:1.2rem}
+.shop-card-buy{width:100%;font-size:.55rem;letter-spacing:.25em;text-transform:uppercase;background:none;border:1px solid var(--bdr);color:var(--mid);padding:.7rem;cursor:none;font-family:'Montserrat',sans-serif;transition:all .25s}
+.shop-card-buy:hover{background:var(--w);color:var(--blk);border-color:var(--w)}
+.shop-badge{position:absolute;top:1rem;left:1rem;font-size:.45rem;letter-spacing:.3em;text-transform:uppercase;background:var(--w);color:var(--blk);padding:.3rem .7rem}
 
-  /* ── BRANDS ── */
-  .brands { padding: 5rem 4rem; border-top: 1px solid var(--border); }
-  .brands-label { text-align: center; font-size: 0.55rem; letter-spacing: 0.55em; text-transform: uppercase; color: var(--mid); margin-bottom: 3rem; }
-  .brands-row { display: flex; gap: 5rem; justify-content: center; align-items: center; flex-wrap: wrap; }
-  .brand-item {
-    font-family: 'Cormorant Garamond', serif; font-size: 1.6rem;
-    font-weight: 300; letter-spacing: 0.08em; color: var(--mid);
-    transition: color 0.25s; cursor: none; opacity: 0.4;
-  }
-  .brand-item:hover { color: var(--white); opacity: 1; }
+/* ═══════════════ OTP MODAL ═══════════════ */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(6px);z-index:800;display:none;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:#0a0a0a;border:1px solid var(--bdr2);width:100%;max-width:420px;padding:3rem;position:relative}
+.modal-close{position:absolute;top:1.2rem;right:1.5rem;background:none;border:none;color:var(--mid);font-size:1.2rem;cursor:none;transition:color .2s}
+.modal-close:hover{color:var(--w)}
+.modal-logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;letter-spacing:.3em;margin-bottom:2rem}
+.modal-logo em{font-style:italic;color:var(--light)}
+.modal-step{display:none}
+.modal-step.active{display:block}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;margin-bottom:.6rem}
+.modal-sub{font-size:.62rem;color:var(--mid);line-height:1.9;margin-bottom:2rem;letter-spacing:.05em}
+.inp-group{margin-bottom:1.4rem}
+.inp-label{font-size:.55rem;letter-spacing:.35em;text-transform:uppercase;color:var(--mid);display:block;margin-bottom:.6rem}
+.inp-wrap{display:flex;border:1px solid var(--bdr2);transition:border-color .25s}
+.inp-wrap:focus-within{border-color:rgba(255,255,255,.6)}
+.inp-prefix{padding:.85rem 1rem;font-size:.75rem;color:var(--mid);border-right:1px solid var(--bdr);flex-shrink:0}
+.inp-wrap input,.modal input[type=text],.modal input[type=tel]{background:none;border:none;outline:none;color:var(--w);font-family:'Montserrat',sans-serif;font-size:.75rem;padding:.85rem 1rem;width:100%;letter-spacing:.05em}
+.modal input[type=text]{border:1px solid var(--bdr2);padding:.85rem 1rem;width:100%;transition:border-color .25s}
+.modal input[type=text]:focus{border-color:rgba(255,255,255,.6);outline:none}
+.otp-boxes{display:flex;gap:.8rem;margin-bottom:1.4rem}
+.otp-box{width:50px;height:54px;border:1px solid var(--bdr2);background:none;color:var(--w);text-align:center;font-size:1.2rem;font-family:'Montserrat',sans-serif;outline:none;transition:border-color .25s;cursor:none}
+.otp-box:focus{border-color:rgba(255,255,255,.7)}
+.btn-full{width:100%;font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;background:var(--w);color:var(--blk);border:none;padding:1.1rem;cursor:none;font-family:'Montserrat',sans-serif;transition:background .25s;margin-top:.5rem}
+.btn-full:hover{background:var(--light)}
+.btn-full.outline{background:none;color:var(--w);border:1px solid var(--bdr2);margin-top:.8rem}
+.btn-full.outline:hover{background:rgba(255,255,255,.06)}
+.modal-note{font-size:.55rem;color:var(--mid);text-align:center;margin-top:1.2rem;letter-spacing:.05em;line-height:1.8}
+.modal-note span{color:var(--w);cursor:none;text-decoration:underline;text-underline-offset:3px}
+.resend-timer{font-size:.55rem;color:var(--mid);margin-top:1rem;text-align:center}
+.success-icon{width:56px;height:56px;border:1px solid rgba(255,255,255,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:1.4rem}
+.user-greeting{font-size:.6rem;letter-spacing:.2em;color:var(--mid);text-transform:uppercase}
 
-  /* ── FOOTER ── */
-  footer { padding: 4rem; border-top: 1px solid var(--border); display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 4rem; }
-  .foot-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; letter-spacing: 0.22em; margin-bottom: 1rem; }
-  .foot-logo em { font-style: italic; color: var(--light); }
-  .foot-desc { font-size: 0.68rem; line-height: 2.1; color: var(--mid); max-width: 28ch; }
-  .foot-col-title { font-size: 0.55rem; letter-spacing: 0.45em; text-transform: uppercase; color: var(--white); margin-bottom: 1.4rem; }
-  .foot-links { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
-  .foot-links a { font-size: 0.68rem; color: var(--mid); text-decoration: none; transition: color 0.25s; cursor: none; }
-  .foot-links a:hover { color: var(--white); }
-  .foot-bottom { padding: 1.8rem 4rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-  .foot-copy { font-size: 0.55rem; letter-spacing: 0.2em; color: var(--mid); text-transform: uppercase; }
+/* ═══════════════ CART DRAWER ═══════════════ */
+.cart-drawer{position:fixed;top:0;right:0;bottom:0;width:420px;background:#080808;border-left:1px solid var(--bdr);z-index:700;transform:translateX(100%);transition:transform .4s cubic-bezier(.16,1,.3,1);display:flex;flex-direction:column}
+.cart-drawer.open{transform:translateX(0)}
+.cart-head{padding:2rem;border-bottom:1px solid var(--bdr);display:flex;justify-content:space-between;align-items:center}
+.cart-head-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300}
+.cart-head-close{background:none;border:none;color:var(--mid);font-size:1.2rem;cursor:none;transition:color .2s}
+.cart-head-close:hover{color:var(--w)}
+.cart-items{flex:1;overflow-y:auto;padding:1.5rem 2rem}
+.cart-item{display:flex;gap:1rem;padding:1.2rem 0;border-bottom:1px solid var(--bdr);align-items:center}
+.cart-item-img{width:60px;height:60px;background:#111;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cart-item-img svg{width:44px}
+.cart-item-info{flex:1}
+.cart-item-brand{font-size:.48rem;letter-spacing:.4em;text-transform:uppercase;color:var(--mid);margin-bottom:.2rem}
+.cart-item-name{font-family:'Cormorant Garamond',serif;font-size:1rem;margin-bottom:.3rem}
+.cart-item-price{font-size:.6rem;letter-spacing:.1em}
+.cart-item-qty{display:flex;align-items:center;gap:.6rem;margin-top:.5rem}
+.qty-btn{background:none;border:1px solid var(--bdr);color:var(--w);width:24px;height:24px;cursor:none;font-size:.7rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.qty-btn:hover{background:var(--w);color:var(--blk)}
+.qty-num{font-size:.65rem;min-width:20px;text-align:center}
+.cart-item-remove{background:none;border:none;color:var(--mid);cursor:none;font-size:.7rem;transition:color .2s;margin-left:auto}
+.cart-item-remove:hover{color:var(--w)}
+.cart-empty{text-align:center;padding:4rem 0;color:var(--mid)}
+.cart-empty-icon{font-size:2.5rem;margin-bottom:1rem;opacity:.3}
+.cart-empty p{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase}
+.cart-foot{padding:2rem;border-top:1px solid var(--bdr)}
+.cart-subtotal{display:flex;justify-content:space-between;margin-bottom:.8rem;font-size:.65rem;letter-spacing:.1em}
+.cart-subtotal span:first-child{color:var(--mid);text-transform:uppercase;letter-spacing:.3em;font-size:.55rem}
+.cart-subtotal.total{padding-top:.8rem;border-top:1px solid var(--bdr);font-size:.75rem}
 
-  /* ── REVEAL ── */
-  .reveal { opacity: 0; transform: translateY(35px); transition: opacity 0.85s cubic-bezier(0.16,1,0.3,1), transform 0.85s cubic-bezier(0.16,1,0.3,1); }
-  .reveal.on { opacity: 1; transform: translateY(0); }
-  .d1 { transition-delay: 0.1s; } .d2 { transition-delay: 0.2s; } .d3 { transition-delay: 0.3s; } .d4 { transition-delay: 0.4s; }
+/* ═══════════════ CHECKOUT / PAYMENT ═══════════════ */
+.checkout-page{padding:8rem 4rem 5rem;max-width:1100px;margin:0 auto}
+.checkout-grid{display:grid;grid-template-columns:1fr 380px;gap:4rem;align-items:start}
+.checkout-title{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;margin-bottom:3rem}
+.checkout-section{margin-bottom:2.5rem}
+.checkout-section-title{font-size:.58rem;letter-spacing:.45em;text-transform:uppercase;color:var(--mid);margin-bottom:1.2rem;padding-bottom:.8rem;border-bottom:1px solid var(--bdr)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.form-row.full{grid-template-columns:1fr}
+.form-field{display:flex;flex-direction:column;gap:.5rem}
+.form-label{font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;color:var(--mid)}
+.form-input{background:none;border:1px solid var(--bdr);color:var(--w);font-family:'Montserrat',sans-serif;font-size:.72rem;padding:.85rem 1rem;outline:none;transition:border-color .25s;width:100%}
+.form-input:focus{border-color:rgba(255,255,255,.5)}
+.payment-methods{display:flex;flex-direction:column;gap:.8rem;margin-bottom:1.5rem}
+.pay-method{border:1px solid var(--bdr);padding:1rem 1.2rem;cursor:none;display:flex;align-items:center;gap:1rem;transition:border-color .3s}
+.pay-method.selected{border-color:rgba(255,255,255,.5)}
+.pay-radio{width:16px;height:16px;border:1px solid var(--bdr2);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:border-color .25s}
+.pay-method.selected .pay-radio::after{content:'';width:8px;height:8px;background:var(--w);border-radius:50%;display:block}
+.pay-name{font-size:.65rem;letter-spacing:.1em;flex:1}
+.pay-icon{font-size:1rem;opacity:.6}
+.rzp-btn{width:100%;padding:1.2rem;background:var(--w);color:var(--blk);border:none;font-family:'Montserrat',sans-serif;font-size:.65rem;letter-spacing:.3em;text-transform:uppercase;cursor:none;transition:background .25s;display:flex;align-items:center;justify-content:center;gap:.8rem;margin-top:1rem}
+.rzp-btn:hover{background:var(--light)}
+.rzp-logo{font-size:.55rem;letter-spacing:.05em;opacity:.6}
+.order-summary{background:#080808;border:1px solid var(--bdr);padding:2rem;position:sticky;top:8rem}
+.order-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--bdr)}
+.order-item{display:flex;justify-content:space-between;align-items:center;padding:.8rem 0;border-bottom:1px solid var(--bdr);font-size:.65rem}
+.order-item-name{color:var(--mid)}
+.order-item-price{color:var(--w)}
+.order-line{display:flex;justify-content:space-between;padding:.7rem 0;font-size:.62rem}
+.order-line span:first-child{color:var(--mid);text-transform:uppercase;letter-spacing:.2em;font-size:.52rem}
+.order-line.grand{border-top:1px solid var(--bdr2);padding-top:1rem;font-size:.75rem;margin-top:.5rem}
+.secure-badges{display:flex;gap:1rem;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--bdr)}
+.badge{font-size:.48rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);display:flex;align-items:center;gap:.4rem}
 
-  @media(max-width:880px){
-    nav { padding: 1.4rem 2rem; }
-    .nav-links { display: none; }
-    .hero-watch { display: none; }
-    .about,.featured-inner { grid-template-columns: 1fr; gap: 3rem; }
-    .products-grid { grid-template-columns: 1fr 1fr; }
-    .loc-grid { grid-template-columns: 1fr 1fr; }
-    footer { grid-template-columns: 1fr 1fr; gap: 2rem; }
-    .about,.collections,.featured,.locations,.brands { padding: 4rem 1.5rem; }
-  }
+/* PAYMENT SUCCESS */
+.pay-success{text-align:center;padding:5rem 2rem}
+.pay-success-icon{width:70px;height:70px;border:1px solid rgba(255,255,255,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 2rem;font-size:1.8rem}
+.pay-success h2{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:300;margin-bottom:1rem}
+.pay-success p{font-size:.65rem;color:var(--mid);letter-spacing:.1em;line-height:2;max-width:35ch;margin:0 auto 2rem}
+.order-id{font-size:.55rem;letter-spacing:.35em;text-transform:uppercase;color:var(--mid);border:1px solid var(--bdr);padding:.7rem 1.5rem;display:inline-block;margin-bottom:2rem}
+
+/* ═══════════════ ADMIN PANEL ═══════════════ */
+#page-admin.active{display:block}
+.admin-page{min-height:calc(100vh - 72px);margin-top:72px;position:relative}
+.admin-sidebar{
+  background:#070707;border-right:1px solid var(--bdr);
+  position:fixed;top:72px;left:0;
+  width:240px;height:calc(100vh - 72px);
+  overflow-y:auto;z-index:200;
+}
+.admin-brand{font-family:'Cormorant Garamond',serif;font-size:1rem;letter-spacing:.3em;padding:1.8rem 2rem;border-bottom:1px solid var(--bdr);color:var(--mid)}
+.admin-brand em{color:var(--w);font-style:italic}
+.admin-nav{padding:1rem 0}
+.admin-nav-item{display:flex;align-items:center;gap:.8rem;padding:.9rem 2rem;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);cursor:none;transition:all .25s;border-left:2px solid transparent}
+.admin-nav-item:hover{color:var(--w);background:rgba(255,255,255,.03)}
+.admin-nav-item.active{color:var(--w);border-left-color:var(--w);background:rgba(255,255,255,.04)}
+.admin-nav-icon{font-size:1rem;opacity:.6}
+.admin-main{padding:3rem;margin-left:240px;min-height:calc(100vh - 72px);overflow-y:auto}
+.admin-topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:3rem}
+.admin-page-title{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300}
+.admin-section{display:none}
+.admin-section.active{display:block}
+
+/* DASHBOARD CARDS */
+.dash-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-bottom:3rem}
+.dash-card{background:#0a0a0a;border:1px solid var(--bdr);padding:1.8rem}
+.dash-card-label{font-size:.52rem;letter-spacing:.4em;text-transform:uppercase;color:var(--mid);margin-bottom:1rem}
+.dash-card-num{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:300}
+.dash-card-sub{font-size:.55rem;color:var(--mid);margin-top:.5rem;letter-spacing:.1em}
+.dash-card-up{color:#6ee7b7}
+.dash-card-down{color:#fca5a5}
+
+/* TABLES */
+.admin-table-wrap{background:#0a0a0a;border:1px solid var(--bdr);overflow:hidden}
+.admin-table-head{padding:1.5rem 2rem;border-bottom:1px solid var(--bdr);display:flex;justify-content:space-between;align-items:center}
+.admin-table-title{font-size:.6rem;letter-spacing:.4em;text-transform:uppercase}
+.admin-table-actions{display:flex;gap:.8rem}
+.tbl-btn{font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;padding:.5rem 1.2rem;border:1px solid var(--bdr);color:var(--mid);background:none;cursor:none;font-family:'Montserrat',sans-serif;transition:all .25s}
+.tbl-btn:hover,.tbl-btn.primary{background:var(--w);color:var(--blk);border-color:var(--w)}
+table{width:100%;border-collapse:collapse}
+th{font-size:.5rem;letter-spacing:.4em;text-transform:uppercase;color:var(--mid);padding:1rem 1.5rem;text-align:left;border-bottom:1px solid var(--bdr);font-weight:400}
+td{padding:1.1rem 1.5rem;font-size:.65rem;letter-spacing:.05em;border-bottom:1px solid rgba(255,255,255,.05)}
+tr:hover td{background:rgba(255,255,255,.02)}
+tr:last-child td{border-bottom:none}
+.status-badge{font-size:.45rem;letter-spacing:.3em;text-transform:uppercase;padding:.35rem .8rem;border-radius:0}
+.status-paid{background:rgba(110,231,183,.1);color:#6ee7b7;border:1px solid rgba(110,231,183,.2)}
+.status-pending{background:rgba(252,211,77,.08);color:#fcd34d;border:1px solid rgba(252,211,77,.2)}
+.status-shipped{background:rgba(147,197,253,.08);color:#93c5fd;border:1px solid rgba(147,197,253,.2)}
+.status-cancelled{background:rgba(252,165,165,.08);color:#fca5a5;border:1px solid rgba(252,165,165,.2)}
+.prod-thumb{width:36px;height:36px;background:#111;display:flex;align-items:center;justify-content:center}
+.prod-thumb svg{width:28px}
+
+/* PRODUCT FORM */
+.prod-form{background:#0a0a0a;border:1px solid var(--bdr);padding:2.5rem;margin-top:2rem;display:none}
+.prod-form.open{display:block}
+.prod-form-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--bdr)}
+.prod-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem}
+.prod-form-grid.full{grid-template-columns:1fr}
+textarea.form-input{resize:vertical;min-height:80px}
+select.form-input{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center}
+select.form-input option{background:#111}
+
+/* CHART PLACEHOLDER */
+.chart-area{background:#0a0a0a;border:1px solid var(--bdr);padding:2rem;margin-bottom:2rem}
+.chart-title{font-size:.58rem;letter-spacing:.4em;text-transform:uppercase;color:var(--mid);margin-bottom:1.5rem}
+.chart-bars{display:flex;align-items:flex-end;gap:.6rem;height:120px}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:.5rem}
+.bar{background:rgba(255,255,255,.15);width:100%;border-top:1px solid rgba(255,255,255,.35);transition:background .3s}
+.bar:hover{background:rgba(255,255,255,.25)}
+.bar-label{font-size:.45rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mid)}
+
+/* ADMIN LOGIN */
+.admin-login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding-top:72px}
+.admin-login-box{background:#080808;border:1px solid var(--bdr);padding:3rem;width:100%;max-width:380px}
+.admin-login-title{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;margin-bottom:.5rem}
+.admin-login-sub{font-size:.58rem;color:var(--mid);letter-spacing:.1em;margin-bottom:2.5rem}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  nav{padding:1.4rem 2rem}
+  .nav-links{display:none}
+  .hero-watch{display:none}
+  .about,.featured-inner{grid-template-columns:1fr;gap:3rem}
+  .shop-grid{grid-template-columns:1fr 1fr}
+  .loc-grid{grid-template-columns:1fr 1fr}
+  footer,.checkout-grid{grid-template-columns:1fr}
+  .about,.locations,.brands{padding:4rem 1.5rem}
+  .shop-page,.checkout-page{padding:7rem 1.5rem 3rem}
+  .featured{padding:4rem 1.5rem}
+  .dash-cards{grid-template-columns:1fr 1fr}
+  .admin-page{grid-template-columns:1fr}
+  .admin-sidebar{position:relative;height:auto}
+  .cart-drawer{width:100vw}
+}
 </style>
 </head>
 <body>
 
-<!-- Crosshair cursor — one SVG, moved with JS transform -->
+<!-- ─── CURSOR ─── -->
 <div id="cur">
-  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"
-       style="transition:transform 0.2s ease; transform-origin:center;">
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
     <line x1="16" y1="2"  x2="16" y2="12" stroke="white" stroke-width="1.2"/>
     <line x1="16" y1="20" x2="16" y2="30" stroke="white" stroke-width="1.2"/>
     <line x1="2"  y1="16" x2="12" y2="16" stroke="white" stroke-width="1.2"/>
@@ -319,132 +381,166 @@
   </svg>
 </div>
 
-<!-- Loader -->
+<!-- ─── LOADER ─── -->
 <div class="loader" id="loader">
   <div class="loader-logo">TIME<em style="font-style:italic;color:#999">VAULT</em></div>
   <div class="loader-line"></div>
   <div class="loader-sub">Curated Premium Watches</div>
 </div>
 
-<!-- NAV -->
+<!-- ─── NAV ─── -->
 <nav>
-  <div class="nav-logo">TIME<em>VAULT</em></div>
+  <div class="nav-logo" onclick="showPage('home')" style="cursor:none">TIME<em>VAULT</em></div>
   <ul class="nav-links">
-    <li><a href="#collections">Collections</a></li>
-    <li><a href="#featured">Featured</a></li>
-    <li><a href="#locations">Stores</a></li>
-    <li><a href="#brands">Brands</a></li>
+    <li><a href="#" onclick="showPage('home');return false">Home</a></li>
+    <li><a href="#" onclick="showPage('shop');return false">Shop</a></li>
+    <li><a href="#" onclick="document.getElementById('locSec').scrollIntoView({behavior:'smooth'});showPage('home');return false">Stores</a></li>
+    <li><a href="#" onclick="showPage('shop');return false">Brands</a></li>
   </ul>
-  <button class="nav-cta">Visit Store</button>
+  <div class="nav-right">
+    <button class="cart-btn" onclick="openCart()">
+      ◻ Cart <span class="cart-count" id="cartCount">0</span>
+    </button>
+    <button class="nav-admin" onclick="showPage('admin')">Admin ↗</button>
+    <button class="nav-cta" id="loginBtn" onclick="openLogin()">Login</button>
+  </div>
 </nav>
 
-<!-- HERO -->
+<!-- ─── OTP LOGIN MODAL ─── -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeLogin()">✕</button>
+    <div class="modal-logo">TIME<em>VAULT</em></div>
+
+    <!-- Step 1: Phone -->
+    <div class="modal-step active" id="step1">
+      <h2 class="modal-title">Welcome Back</h2>
+      <p class="modal-sub">Enter your phone number to receive a one-time password.</p>
+      <div class="inp-group">
+        <label class="inp-label">Mobile Number</label>
+        <div class="inp-wrap">
+          <span class="inp-prefix">🇮🇳 +91</span>
+          <input type="tel" id="phoneInput" placeholder="98765 43210" maxlength="10">
+        </div>
+      </div>
+      <button class="btn-full" onclick="sendOTP()">Send OTP →</button>
+      <p class="modal-note">By continuing, you agree to our <span>Terms</span> & <span>Privacy Policy</span></p>
+    </div>
+
+    <!-- Step 2: OTP -->
+    <div class="modal-step" id="step2">
+      <h2 class="modal-title">Verify OTP</h2>
+      <p class="modal-sub" id="otpSubText">We sent a 6-digit code to +91 XXXXXXXXXX</p>
+      <div class="otp-boxes">
+        <input class="otp-box" maxlength="1" id="o1" oninput="otpNext(this,'o2')">
+        <input class="otp-box" maxlength="1" id="o2" oninput="otpNext(this,'o3')">
+        <input class="otp-box" maxlength="1" id="o3" oninput="otpNext(this,'o4')">
+        <input class="otp-box" maxlength="1" id="o4" oninput="otpNext(this,'o5')">
+        <input class="otp-box" maxlength="1" id="o5" oninput="otpNext(this,'o6')">
+        <input class="otp-box" maxlength="1" id="o6" oninput="otpNext(this,null)">
+      </div>
+      <button class="btn-full" onclick="verifyOTP()">Verify & Login →</button>
+      <button class="btn-full outline" onclick="goStep(1)">← Change Number</button>
+      <p class="resend-timer" id="resendTimer">Resend OTP in <span id="countdown">30</span>s</p>
+    </div>
+
+    <!-- Step 3: Success -->
+    <div class="modal-step" id="step3">
+      <div class="success-icon">✓</div>
+      <h2 class="modal-title" style="text-align:center">Logged In</h2>
+      <p class="modal-sub" style="text-align:center">Welcome to Time Vault. You can now browse and purchase watches.</p>
+      <button class="btn-full" onclick="closeLogin();showPage('shop')">Browse Collection →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── CART DRAWER ─── -->
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-head">
+    <div class="cart-head-title">Your Cart</div>
+    <button class="cart-head-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty">
+      <div class="cart-empty-icon">◻</div>
+      <p>Your cart is empty</p>
+    </div>
+  </div>
+  <div class="cart-foot" id="cartFoot" style="display:none">
+    <div class="cart-subtotal"><span>Subtotal</span><span id="cartSubtotal">₹0</span></div>
+    <div class="cart-subtotal"><span>Shipping</span><span>FREE</span></div>
+    <div class="cart-subtotal total"><span>Total</span><span id="cartTotal">₹0</span></div>
+    <button class="btn-full" style="margin-top:1.2rem" onclick="closeCart();showPage('checkout')">Checkout →</button>
+    <button class="btn-full outline" onclick="closeCart();showPage('shop')">Continue Shopping</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PAGE: HOME
+═══════════════════════════════════════ -->
+<div id="page-home" class="page active">
+
 <section class="hero">
   <div class="hero-grid"></div>
-
-  <!-- Animated hero watch -->
   <div class="hero-watch">
     <div class="watch-float">
-      <svg viewBox="0 0 280 380" xmlns="http://www.w3.org/2000/svg"
-           style="filter:drop-shadow(0 20px 50px rgba(255,255,255,0.07))">
-        <!-- strap top -->
-        <rect x="100" y="8" width="80" height="92" rx="10" fill="#111" stroke="rgba(255,255,255,0.18)" stroke-width="0.8"/>
-        <line x1="113" y1="28" x2="167" y2="28" stroke="rgba(255,255,255,0.1)" stroke-width="0.6"/>
-        <line x1="113" y1="44" x2="167" y2="44" stroke="rgba(255,255,255,0.1)" stroke-width="0.6"/>
-        <line x1="113" y1="60" x2="167" y2="60" stroke="rgba(255,255,255,0.1)" stroke-width="0.6"/>
-        <line x1="113" y1="76" x2="167" y2="76" stroke="rgba(255,255,255,0.1)" stroke-width="0.6"/>
-        <!-- strap bottom -->
-        <rect x="100" y="280" width="80" height="92" rx="10" fill="#111" stroke="rgba(255,255,255,0.18)" stroke-width="0.8"/>
-        <line x1="113" y1="300" x2="167" y2="300" stroke="rgba(255,255,255,0.1)" stroke-width="0.6"/>
-        <line x1="113" y1="316" x2="167" y2="316" stroke="rgba(255,255,255,0.1)" stroke-width="0.6"/>
-        <line x1="113" y1="332" x2="167" y2="332" stroke="rgba(255,255,255,0.1)" stroke-width="0.6"/>
-        <line x1="113" y1="348" x2="167" y2="348" stroke="rgba(255,255,255,0.1)" stroke-width="0.6"/>
-        <!-- case -->
-        <rect x="20" y="92" width="240" height="196" rx="46" fill="#0a0a0a" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
-        <!-- crown -->
-        <rect x="260" y="172" width="17" height="30" rx="4" fill="#111" stroke="rgba(255,255,255,0.2)" stroke-width="0.8"/>
-        <!-- bezel -->
-        <circle cx="140" cy="190" r="89" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="1.5"/>
-        <!-- dial -->
+      <svg viewBox="0 0 280 380" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 20px 50px rgba(255,255,255,.07))">
+        <rect x="100" y="8" width="80" height="92" rx="10" fill="#111" stroke="rgba(255,255,255,.18)" stroke-width=".8"/>
+        <rect x="100" y="280" width="80" height="92" rx="10" fill="#111" stroke="rgba(255,255,255,.18)" stroke-width=".8"/>
+        <line x1="113" y1="28" x2="167" y2="28" stroke="rgba(255,255,255,.1)" stroke-width=".6"/>
+        <line x1="113" y1="44" x2="167" y2="44" stroke="rgba(255,255,255,.1)" stroke-width=".6"/>
+        <line x1="113" y1="60" x2="167" y2="60" stroke="rgba(255,255,255,.1)" stroke-width=".6"/>
+        <line x1="113" y1="300" x2="167" y2="300" stroke="rgba(255,255,255,.1)" stroke-width=".6"/>
+        <line x1="113" y1="316" x2="167" y2="316" stroke="rgba(255,255,255,.1)" stroke-width=".6"/>
+        <rect x="20" y="92" width="240" height="196" rx="46" fill="#0a0a0a" stroke="rgba(255,255,255,.22)" stroke-width="1.5"/>
+        <rect x="260" y="172" width="17" height="30" rx="4" fill="#111" stroke="rgba(255,255,255,.2)" stroke-width=".8"/>
+        <circle cx="140" cy="190" r="89" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="1.5"/>
         <circle cx="140" cy="190" r="80" fill="#050505"/>
-        <circle cx="140" cy="190" r="74" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="5"/>
-        <!-- hour markers -->
-        <g stroke="rgba(255,255,255,0.7)">
+        <circle cx="140" cy="190" r="74" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="5"/>
+        <g stroke="rgba(255,255,255,.7)">
           <line x1="140" y1="115" x2="140" y2="130" stroke-width="2"   transform="rotate(0   140 190)"/>
-          <line x1="140" y1="117" x2="140" y2="127" stroke-width="0.8" transform="rotate(30  140 190)"/>
+          <line x1="140" y1="117" x2="140" y2="127" stroke-width=".8" transform="rotate(30  140 190)"/>
           <line x1="140" y1="115" x2="140" y2="130" stroke-width="2"   transform="rotate(60  140 190)"/>
-          <line x1="140" y1="117" x2="140" y2="127" stroke-width="0.8" transform="rotate(90  140 190)"/>
+          <line x1="140" y1="117" x2="140" y2="127" stroke-width=".8" transform="rotate(90  140 190)"/>
           <line x1="140" y1="115" x2="140" y2="130" stroke-width="2"   transform="rotate(120 140 190)"/>
-          <line x1="140" y1="117" x2="140" y2="127" stroke-width="0.8" transform="rotate(150 140 190)"/>
+          <line x1="140" y1="117" x2="140" y2="127" stroke-width=".8" transform="rotate(150 140 190)"/>
           <line x1="140" y1="115" x2="140" y2="130" stroke-width="2"   transform="rotate(180 140 190)"/>
-          <line x1="140" y1="117" x2="140" y2="127" stroke-width="0.8" transform="rotate(210 140 190)"/>
+          <line x1="140" y1="117" x2="140" y2="127" stroke-width=".8" transform="rotate(210 140 190)"/>
           <line x1="140" y1="115" x2="140" y2="130" stroke-width="2"   transform="rotate(240 140 190)"/>
-          <line x1="140" y1="117" x2="140" y2="127" stroke-width="0.8" transform="rotate(270 140 190)"/>
+          <line x1="140" y1="117" x2="140" y2="127" stroke-width=".8" transform="rotate(270 140 190)"/>
           <line x1="140" y1="115" x2="140" y2="130" stroke-width="2"   transform="rotate(300 140 190)"/>
-          <line x1="140" y1="117" x2="140" y2="127" stroke-width="0.8" transform="rotate(330 140 190)"/>
+          <line x1="140" y1="117" x2="140" y2="127" stroke-width=".8" transform="rotate(330 140 190)"/>
         </g>
-        <!-- text -->
-        <text x="140" y="163" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="9" font-family="Cormorant Garamond,serif" letter-spacing="4">TIME VAULT</text>
-        <text x="140" y="177" text-anchor="middle" fill="rgba(255,255,255,0.25)" font-size="5" font-family="Montserrat,sans-serif" letter-spacing="2">PREMIUM</text>
-        <!-- sub-dial -->
-        <circle cx="140" cy="220" r="15" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.8"/>
-        <!-- hands -->
+        <text x="140" y="163" text-anchor="middle" fill="rgba(255,255,255,.85)" font-size="9" font-family="Cormorant Garamond,serif" letter-spacing="4">TIME VAULT</text>
+        <text x="140" y="177" text-anchor="middle" fill="rgba(255,255,255,.25)" font-size="5" font-family="Montserrat,sans-serif" letter-spacing="2">PREMIUM</text>
+        <circle cx="140" cy="220" r="15" fill="none" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
         <g id="hHand"><line x1="140" y1="145" x2="140" y2="190" stroke="white" stroke-width="3.5" stroke-linecap="round"/></g>
         <g id="mHand"><line x1="140" y1="126" x2="140" y2="190" stroke="white" stroke-width="2.2" stroke-linecap="round"/></g>
-        <g id="sHand">
-          <line x1="140" y1="112" x2="140" y2="208" stroke="rgba(255,255,255,0.55)" stroke-width="0.9" stroke-linecap="round"/>
-          <circle cx="140" cy="214" r="2.5" fill="rgba(255,255,255,0.55)"/>
-        </g>
-        <!-- center -->
+        <g id="sHand"><line x1="140" y1="112" x2="140" y2="208" stroke="rgba(255,255,255,.55)" stroke-width=".9" stroke-linecap="round"/></g>
         <circle cx="140" cy="190" r="5" fill="white"/>
         <circle cx="140" cy="190" r="2.2" fill="#050505"/>
       </svg>
     </div>
   </div>
-
   <div class="hero-content">
     <div class="hero-eyebrow">Est. Kerala — Six Showrooms</div>
     <h1 class="hero-title">Time Is<br><em>Art</em></h1>
     <p class="hero-sub">Premium & Semi-Premium Watches, curated for those who know the difference.</p>
     <div class="hero-actions">
-      <button class="btn-primary">Explore Collection</button>
-      <button class="btn-ghost">Our Story <span class="arr">→</span></button>
+      <button class="btn-primary" onclick="showPage('shop')">Shop Now</button>
+      <button class="btn-ghost" onclick="showPage('shop')">View Collection <span class="arr">→</span></button>
     </div>
   </div>
-
-  <div class="scroll-cue">
-    <span>Scroll</span>
-    <div class="scroll-line"></div>
-  </div>
+  <div class="scroll-cue"><span>Scroll</span><div class="scroll-line"></div></div>
 </section>
 
-<!-- MARQUEE -->
 <div class="marquee-wrap">
   <div class="marquee-track">
-    <div class="m-item"><div class="m-dot"></div>Fastrack</div>
-    <div class="m-item"><div class="m-dot"></div>Titan</div>
-    <div class="m-item"><div class="m-dot"></div>Casio</div>
-    <div class="m-item"><div class="m-dot"></div>Wristár</div>
-    <div class="m-item"><div class="m-dot"></div>Koduvally</div>
-    <div class="m-item"><div class="m-dot"></div>Kunnamangalam</div>
-    <div class="m-item"><div class="m-dot"></div>Kannur</div>
-    <div class="m-item"><div class="m-dot"></div>Nilambur</div>
-    <div class="m-item"><div class="m-dot"></div>Tirur</div>
-    <div class="m-item"><div class="m-dot"></div>Sulthan Bathery</div>
-    <div class="m-item"><div class="m-dot"></div>Fastrack</div>
-    <div class="m-item"><div class="m-dot"></div>Titan</div>
-    <div class="m-item"><div class="m-dot"></div>Casio</div>
-    <div class="m-item"><div class="m-dot"></div>Wristár</div>
-    <div class="m-item"><div class="m-dot"></div>Koduvally</div>
-    <div class="m-item"><div class="m-dot"></div>Kunnamangalam</div>
-    <div class="m-item"><div class="m-dot"></div>Kannur</div>
-    <div class="m-item"><div class="m-dot"></div>Nilambur</div>
-    <div class="m-item"><div class="m-dot"></div>Tirur</div>
-    <div class="m-item"><div class="m-dot"></div>Sulthan Bathery</div>
+    <div class="m-item"><div class="m-dot"></div>Fastrack</div><div class="m-item"><div class="m-dot"></div>Titan</div><div class="m-item"><div class="m-dot"></div>Casio</div><div class="m-item"><div class="m-dot"></div>Wristár</div><div class="m-item"><div class="m-dot"></div>Koduvally</div><div class="m-item"><div class="m-dot"></div>Kunnamangalam</div><div class="m-item"><div class="m-dot"></div>Kannur</div><div class="m-item"><div class="m-dot"></div>Nilambur</div><div class="m-item"><div class="m-dot"></div>Tirur</div><div class="m-item"><div class="m-dot"></div>Sulthan Bathery</div>
+    <div class="m-item"><div class="m-dot"></div>Fastrack</div><div class="m-item"><div class="m-dot"></div>Titan</div><div class="m-item"><div class="m-dot"></div>Casio</div><div class="m-item"><div class="m-dot"></div>Wristár</div><div class="m-item"><div class="m-dot"></div>Koduvally</div><div class="m-item"><div class="m-dot"></div>Kunnamangalam</div><div class="m-item"><div class="m-dot"></div>Kannur</div><div class="m-item"><div class="m-dot"></div>Nilambur</div><div class="m-item"><div class="m-dot"></div>Tirur</div><div class="m-item"><div class="m-dot"></div>Sulthan Bathery</div>
   </div>
 </div>
 
-<!-- ABOUT -->
 <section class="about">
   <div class="reveal">
     <div class="sec-label">Our Philosophy</div>
@@ -459,138 +555,29 @@
   </div>
 </section>
 
-<!-- COLLECTIONS -->
-<section class="collections" id="collections">
-  <div class="sec-header reveal">
-    <div>
-      <div class="sec-label">Curated Selection</div>
-      <h2 class="sec-title">New Arrivals</h2>
-    </div>
-    <a href="#" class="sec-link">View All →</a>
-  </div>
-  <div class="products-grid">
-
-    <!-- card 1 -->
-    <div class="product-card reveal">
-      <div class="product-bg" style="background:linear-gradient(135deg,#0d0d0d,#141414)">
-        <svg viewBox="0 0 200 260" class="product-watch-svg" xmlns="http://www.w3.org/2000/svg">
-          <rect x="72" y="2" width="56" height="70" rx="7" fill="#0e0e0e" stroke="rgba(255,255,255,0.12)" stroke-width="0.7"/>
-          <rect x="72" y="188" width="56" height="70" rx="7" fill="#0e0e0e" stroke="rgba(255,255,255,0.12)" stroke-width="0.7"/>
-          <rect x="18" y="65" width="164" height="128" rx="32" fill="#090909" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
-          <circle cx="100" cy="129" r="55" fill="#050505"/>
-          <circle cx="100" cy="129" r="49" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
-          <g stroke="rgba(255,255,255,0.6)" stroke-width="1.3">
-            <line x1="100" y1="78" x2="100" y2="90" transform="rotate(0   100 129)"/>
-            <line x1="100" y1="78" x2="100" y2="90" transform="rotate(90  100 129)"/>
-            <line x1="100" y1="78" x2="100" y2="90" transform="rotate(180 100 129)"/>
-            <line x1="100" y1="78" x2="100" y2="90" transform="rotate(270 100 129)"/>
-          </g>
-          <text x="100" y="118" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="7" font-family="Cormorant Garamond,serif" letter-spacing="2">CASIO</text>
-          <text x="100" y="130" text-anchor="middle" fill="rgba(255,255,255,0.28)" font-size="5" font-family="Montserrat,sans-serif" letter-spacing="1">EDIFICE</text>
-          <line x1="100" y1="88" x2="100" y2="129" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
-          <line x1="100" y1="96" x2="100" y2="129" stroke="white" stroke-width="2.4" stroke-linecap="round" transform="rotate(55 100 129)"/>
-          <circle cx="100" cy="129" r="3" fill="white"/>
-        </svg>
-      </div>
-      <div class="p-tag">New</div>
-      <div class="product-info">
-        <div class="p-brand">Casio</div>
-        <div class="p-name">Edifice Series</div>
-        <div class="p-price">From ₹4,999</div>
-      </div>
-    </div>
-
-    <!-- card 2 (offset) -->
-    <div class="product-card reveal d2" style="margin-top:3rem">
-      <div class="product-bg" style="background:linear-gradient(135deg,#0a0a0a,#0f0f0f)">
-        <svg viewBox="0 0 200 260" class="product-watch-svg" xmlns="http://www.w3.org/2000/svg">
-          <rect x="68" y="2" width="64" height="70" rx="7" fill="#0e0e0e" stroke="rgba(255,255,255,0.12)" stroke-width="0.7"/>
-          <rect x="68" y="188" width="64" height="70" rx="7" fill="#0e0e0e" stroke="rgba(255,255,255,0.12)" stroke-width="0.7"/>
-          <rect x="14" y="65" width="172" height="128" rx="8" fill="#090909" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
-          <rect x="24" y="74" width="152" height="110" rx="3" fill="#050505"/>
-          <rect x="32" y="80" width="136" height="18" rx="2" fill="#0d0d0d"/>
-          <text x="100" y="93" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="6" font-family="Montserrat,sans-serif" letter-spacing="2">00:00:00</text>
-          <rect x="32" y="104" width="136" height="64" rx="2" fill="#080808"/>
-          <text x="100" y="140" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-size="22" font-family="Cormorant Garamond,serif">10:09</text>
-          <text x="100" y="157" text-anchor="middle" fill="rgba(255,255,255,0.25)" font-size="5" font-family="Montserrat,sans-serif" letter-spacing="2">G-SHOCK</text>
-        </svg>
-      </div>
-      <div class="p-tag">New</div>
-      <div class="product-info">
-        <div class="p-brand">Casio</div>
-        <div class="p-name">G-Shock Digital</div>
-        <div class="p-price">From ₹3,499</div>
-      </div>
-    </div>
-
-    <!-- card 3 -->
-    <div class="product-card reveal d3">
-      <div class="product-bg" style="background:linear-gradient(135deg,#0c0c0c,#111)">
-        <svg viewBox="0 0 200 260" class="product-watch-svg" xmlns="http://www.w3.org/2000/svg">
-          <rect x="68" y="2" width="64" height="70" rx="7" fill="#111" stroke="rgba(255,255,255,0.12)" stroke-width="0.7"/>
-          <rect x="68" y="188" width="64" height="70" rx="7" fill="#111" stroke="rgba(255,255,255,0.12)" stroke-width="0.7"/>
-          <rect x="14" y="60" width="172" height="140" rx="36" fill="#0a0a0a" stroke="rgba(255,255,255,0.2)" stroke-width="1.4"/>
-          <circle cx="100" cy="130" r="62" fill="#050505"/>
-          <circle cx="100" cy="130" r="54" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="0.5" stroke-dasharray="2,5"/>
-          <g stroke="rgba(255,255,255,0.6)" stroke-width="1.3">
-            <line x1="100" y1="72" x2="100" y2="86" transform="rotate(0   100 130)"/>
-            <line x1="100" y1="72" x2="100" y2="86" transform="rotate(90  100 130)"/>
-            <line x1="100" y1="72" x2="100" y2="86" transform="rotate(180 100 130)"/>
-            <line x1="100" y1="72" x2="100" y2="86" transform="rotate(270 100 130)"/>
-          </g>
-          <text x="100" y="116" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="8" font-family="Cormorant Garamond,serif" letter-spacing="2">TITAN</text>
-          <text x="100" y="129" text-anchor="middle" fill="rgba(255,255,255,0.28)" font-size="4.5" font-family="Montserrat,sans-serif" letter-spacing="1.5">RAGA</text>
-          <line x1="100" y1="82" x2="100" y2="130" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
-          <line x1="100" y1="90" x2="100" y2="130" stroke="white" stroke-width="2.6" stroke-linecap="round" transform="rotate(-70 100 130)"/>
-          <line x1="100" y1="72" x2="100" y2="145" stroke="rgba(255,255,255,0.4)" stroke-width="0.9" stroke-linecap="round" transform="rotate(140 100 130)"/>
-          <circle cx="100" cy="130" r="3.5" fill="white"/>
-        </svg>
-      </div>
-      <div class="product-info">
-        <div class="p-brand">Titan</div>
-        <div class="p-name">Raga Collection</div>
-        <div class="p-price">From ₹6,999</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FEATURED -->
-<section class="featured" id="featured">
+<section class="featured">
   <div class="featured-inner">
     <div class="reveal">
       <div class="feat-watch-wrap">
-        <div class="feat-ring"></div>
-        <div class="feat-ring"></div>
-        <div class="feat-ring"></div>
+        <div class="feat-ring"></div><div class="feat-ring"></div><div class="feat-ring"></div>
         <svg class="feat-watch-img" viewBox="0 0 280 380" xmlns="http://www.w3.org/2000/svg">
-          <rect x="100" y="8" width="80" height="92" rx="10" fill="#111" stroke="rgba(255,255,255,0.18)" stroke-width="0.8"/>
-          <rect x="100" y="280" width="80" height="92" rx="10" fill="#111" stroke="rgba(255,255,255,0.18)" stroke-width="0.8"/>
-          <rect x="20" y="92" width="240" height="196" rx="46" fill="#090909" stroke="rgba(255,255,255,0.22)" stroke-width="1.8"/>
-          <rect x="260" y="172" width="17" height="30" rx="4" fill="#111" stroke="rgba(255,255,255,0.2)" stroke-width="0.8"/>
-          <circle cx="140" cy="190" r="89" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="2"/>
+          <rect x="100" y="8" width="80" height="92" rx="10" fill="#111" stroke="rgba(255,255,255,.18)" stroke-width=".8"/>
+          <rect x="100" y="280" width="80" height="92" rx="10" fill="#111" stroke="rgba(255,255,255,.18)" stroke-width=".8"/>
+          <rect x="20" y="92" width="240" height="196" rx="46" fill="#090909" stroke="rgba(255,255,255,.22)" stroke-width="1.8"/>
+          <rect x="260" y="172" width="17" height="30" rx="4" fill="#111" stroke="rgba(255,255,255,.2)" stroke-width=".8"/>
           <circle cx="140" cy="190" r="80" fill="#040404"/>
-          <circle cx="140" cy="190" r="74" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="5"/>
-          <g stroke="rgba(255,255,255,0.7)">
-            <line x1="140" y1="115" x2="140" y2="130" stroke-width="2"   transform="rotate(0   140 190)"/>
-            <line x1="140" y1="117" x2="140" y2="127" stroke-width="0.8" transform="rotate(30  140 190)"/>
-            <line x1="140" y1="115" x2="140" y2="130" stroke-width="2"   transform="rotate(60  140 190)"/>
-            <line x1="140" y1="117" x2="140" y2="127" stroke-width="0.8" transform="rotate(90  140 190)"/>
-            <line x1="140" y1="115" x2="140" y2="130" stroke-width="2"   transform="rotate(120 140 190)"/>
-            <line x1="140" y1="117" x2="140" y2="127" stroke-width="0.8" transform="rotate(150 140 190)"/>
-            <line x1="140" y1="115" x2="140" y2="130" stroke-width="2"   transform="rotate(180 140 190)"/>
-            <line x1="140" y1="117" x2="140" y2="127" stroke-width="0.8" transform="rotate(210 140 190)"/>
-            <line x1="140" y1="115" x2="140" y2="130" stroke-width="2"   transform="rotate(240 140 190)"/>
-            <line x1="140" y1="117" x2="140" y2="127" stroke-width="0.8" transform="rotate(270 140 190)"/>
-            <line x1="140" y1="115" x2="140" y2="130" stroke-width="2"   transform="rotate(300 140 190)"/>
-            <line x1="140" y1="117" x2="140" y2="127" stroke-width="0.8" transform="rotate(330 140 190)"/>
+          <g stroke="rgba(255,255,255,.7)">
+            <line x1="140" y1="115" x2="140" y2="130" stroke-width="2" transform="rotate(0   140 190)"/>
+            <line x1="140" y1="115" x2="140" y2="130" stroke-width="2" transform="rotate(60  140 190)"/>
+            <line x1="140" y1="115" x2="140" y2="130" stroke-width="2" transform="rotate(120 140 190)"/>
+            <line x1="140" y1="115" x2="140" y2="130" stroke-width="2" transform="rotate(180 140 190)"/>
+            <line x1="140" y1="115" x2="140" y2="130" stroke-width="2" transform="rotate(240 140 190)"/>
+            <line x1="140" y1="115" x2="140" y2="130" stroke-width="2" transform="rotate(300 140 190)"/>
           </g>
-          <text x="140" y="163" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="10" font-family="Cormorant Garamond,serif" letter-spacing="4">TIME VAULT</text>
-          <text x="140" y="178" text-anchor="middle" fill="rgba(255,255,255,0.22)" font-size="5.5" font-family="Montserrat,sans-serif" letter-spacing="2">SIGNATURE</text>
-          <circle cx="140" cy="220" r="16" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.8"/>
+          <text x="140" y="163" text-anchor="middle" fill="rgba(255,255,255,.85)" font-size="10" font-family="Cormorant Garamond,serif" letter-spacing="4">TIME VAULT</text>
+          <text x="140" y="178" text-anchor="middle" fill="rgba(255,255,255,.22)" font-size="5.5" font-family="Montserrat,sans-serif" letter-spacing="2">SIGNATURE</text>
           <line x1="140" y1="128" x2="140" y2="190" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
           <line x1="140" y1="140" x2="140" y2="190" stroke="white" stroke-width="3.5" stroke-linecap="round" transform="rotate(110 140 190)"/>
-          <line x1="140" y1="114" x2="140" y2="210" stroke="rgba(255,255,255,0.45)" stroke-width="0.9" stroke-linecap="round" transform="rotate(195 140 190)"/>
           <circle cx="140" cy="190" r="5" fill="white"/>
           <circle cx="140" cy="190" r="2.2" fill="#040404"/>
         </svg>
@@ -599,25 +586,21 @@
     <div class="reveal d2">
       <div class="feat-label">Editor's Pick</div>
       <h2 class="feat-title">The Signature<br>Timepiece</h2>
-      <p class="feat-desc">Our flagship curated collection represents the pinnacle of precision engineering and timeless design. Each piece hand-selected for those who wear intention on their wrist.</p>
+      <p class="feat-desc">Our flagship curated collection — precision engineering meets timeless design. Each piece hand-selected for those who wear intention on their wrist.</p>
       <div class="specs">
         <div class="spec-row"><span class="spec-k">Movement</span><span class="spec-v">Japanese Quartz</span></div>
         <div class="spec-row"><span class="spec-k">Case Material</span><span class="spec-v">Stainless Steel</span></div>
         <div class="spec-row"><span class="spec-k">Water Resistance</span><span class="spec-v">50 Metres</span></div>
         <div class="spec-row"><span class="spec-k">Warranty</span><span class="spec-v">2 Years</span></div>
       </div>
-      <button class="btn-primary">Enquire Now</button>
+      <button class="btn-primary" onclick="showPage('shop')">Shop Now</button>
     </div>
   </div>
 </section>
 
-<!-- LOCATIONS -->
-<section class="locations" id="locations">
+<section class="locations" id="locSec">
   <div class="sec-header reveal">
-    <div>
-      <div class="sec-label">Find Us</div>
-      <h2 class="sec-title">Our Showrooms</h2>
-    </div>
+    <div><div class="sec-label">Find Us</div><h2 class="sec-title">Our Showrooms</h2></div>
   </div>
   <div class="loc-grid">
     <div class="loc-card reveal">   <div class="loc-num">01</div><div class="loc-name">Koduvally</div>    <div class="loc-region">Calicut District</div></div>
@@ -629,18 +612,16 @@
   </div>
 </section>
 
-<!-- BRANDS -->
-<section class="brands" id="brands">
+<section class="brands">
   <div class="brands-label reveal">Our Brand Partners</div>
   <div class="brands-row reveal d2">
     <div class="brand-item">Fastrack</div>
     <div class="brand-item" style="font-size:2.2rem">Titan</div>
-    <div class="brand-item" style="font-size:2rem;letter-spacing:0.04em">CASIO</div>
+    <div class="brand-item" style="font-size:2rem">CASIO</div>
     <div class="brand-item">Wristár</div>
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <div>
     <div class="foot-logo">TIME<em>VAULT</em></div>
@@ -648,71 +629,571 @@
   </div>
   <div>
     <div class="foot-col-title">Collections</div>
-    <ul class="foot-links">
-      <li><a href="#">New Arrivals</a></li>
-      <li><a href="#">Casio</a></li>
-      <li><a href="#">Titan</a></li>
-      <li><a href="#">Fastrack</a></li>
-    </ul>
+    <ul class="foot-links"><li><a href="#">New Arrivals</a></li><li><a href="#">Casio</a></li><li><a href="#">Titan</a></li><li><a href="#">Fastrack</a></li></ul>
   </div>
   <div>
     <div class="foot-col-title">Company</div>
-    <ul class="foot-links">
-      <li><a href="#">About Us</a></li>
-      <li><a href="#">Our Story</a></li>
-      <li><a href="#">Careers</a></li>
-    </ul>
+    <ul class="foot-links"><li><a href="#">About Us</a></li><li><a href="#">Our Story</a></li><li><a href="#">Careers</a></li></ul>
   </div>
   <div>
     <div class="foot-col-title">Contact</div>
-    <ul class="foot-links">
-      <li><a href="#">Instagram</a></li>
-      <li><a href="#">WhatsApp</a></li>
-      <li><a href="#">Locations</a></li>
-    </ul>
+    <ul class="foot-links"><li><a href="#">Instagram</a></li><li><a href="#">WhatsApp</a></li><li><a href="#">Locations</a></li></ul>
   </div>
 </footer>
 <div class="foot-bottom">
   <div class="foot-copy">© 2026 Time Vault. All Rights Reserved.</div>
-  <div class="foot-copy">Curated Excellence — Kerala</div>
+  <div class="foot-copy">Powered by Razorpay · FastAPI · PostgreSQL</div>
+</div>
+</div><!-- end home -->
+
+<!-- ══════════════════════════════════════
+     PAGE: SHOP
+═══════════════════════════════════════ -->
+<div id="page-shop" class="page">
+<div class="shop-page">
+  <div class="shop-header">
+    <h1 class="shop-title">Collection</h1>
+    <p class="shop-sub">Curated Premium & Semi-Premium Timepieces</p>
+    <div class="shop-filters">
+      <button class="filter-btn active" onclick="filterShop(this,'all')">All</button>
+      <button class="filter-btn" onclick="filterShop(this,'casio')">Casio</button>
+      <button class="filter-btn" onclick="filterShop(this,'titan')">Titan</button>
+      <button class="filter-btn" onclick="filterShop(this,'fastrack')">Fastrack</button>
+    </div>
+  </div>
+  <div class="shop-grid" id="shopGrid"></div>
+</div>
 </div>
 
+<!-- ══════════════════════════════════════
+     PAGE: CHECKOUT
+═══════════════════════════════════════ -->
+<div id="page-checkout" class="page">
+<div class="checkout-page">
+  <div id="checkoutForm">
+    <h1 class="checkout-title">Checkout</h1>
+    <div class="checkout-grid">
+      <div>
+        <div class="checkout-section">
+          <div class="checkout-section-title">Contact Information</div>
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label">First Name</label>
+              <input class="form-input" type="text" placeholder="Arjun">
+            </div>
+            <div class="form-field">
+              <label class="form-label">Last Name</label>
+              <input class="form-input" type="text" placeholder="Menon">
+            </div>
+          </div>
+          <div class="form-row full">
+            <div class="form-field">
+              <label class="form-label">Phone</label>
+              <input class="form-input" type="text" placeholder="+91 98765 43210" id="chkPhone">
+            </div>
+          </div>
+          <div class="form-row full">
+            <div class="form-field">
+              <label class="form-label">Email (optional)</label>
+              <input class="form-input" type="text" placeholder="arjun@email.com">
+            </div>
+          </div>
+        </div>
+        <div class="checkout-section">
+          <div class="checkout-section-title">Delivery Address</div>
+          <div class="form-row full">
+            <div class="form-field">
+              <label class="form-label">Address Line 1</label>
+              <input class="form-input" type="text" placeholder="House No / Street">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label">City</label>
+              <input class="form-input" type="text" placeholder="Kozhikode">
+            </div>
+            <div class="form-field">
+              <label class="form-label">PIN Code</label>
+              <input class="form-input" type="text" placeholder="673001">
+            </div>
+          </div>
+          <div class="form-row full">
+            <div class="form-field">
+              <label class="form-label">State</label>
+              <input class="form-input" type="text" placeholder="Kerala">
+            </div>
+          </div>
+        </div>
+        <div class="checkout-section">
+          <div class="checkout-section-title">Payment Method</div>
+          <div class="payment-methods">
+            <div class="pay-method selected" onclick="selectPay(this)">
+              <div class="pay-radio"></div>
+              <span class="pay-name">UPI / PhonePe / GPay</span>
+              <span class="pay-icon">📱</span>
+            </div>
+            <div class="pay-method" onclick="selectPay(this)">
+              <div class="pay-radio"></div>
+              <span class="pay-name">Credit / Debit Card</span>
+              <span class="pay-icon">💳</span>
+            </div>
+            <div class="pay-method" onclick="selectPay(this)">
+              <div class="pay-radio"></div>
+              <span class="pay-name">Net Banking</span>
+              <span class="pay-icon">🏦</span>
+            </div>
+            <div class="pay-method" onclick="selectPay(this)">
+              <div class="pay-radio"></div>
+              <span class="pay-name">Cash on Delivery</span>
+              <span class="pay-icon">💵</span>
+            </div>
+          </div>
+          <button class="rzp-btn" onclick="payWithRazorpay()">
+            <span>Pay Securely</span>
+            <span class="rzp-logo">— Powered by Razorpay</span>
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <div class="order-summary">
+          <div class="order-title">Order Summary</div>
+          <div id="orderItems"></div>
+          <div style="margin-top:1rem">
+            <div class="order-line"><span>Subtotal</span><span id="orderSubtotal">₹0</span></div>
+            <div class="order-line"><span>Shipping</span><span>FREE</span></div>
+            <div class="order-line"><span>GST (18%)</span><span id="orderGst">₹0</span></div>
+            <div class="order-line grand"><span>Grand Total</span><span id="orderGrand">₹0</span></div>
+          </div>
+          <div class="secure-badges">
+            <div class="badge">🔒 SSL Secure</div>
+            <div class="badge">✓ Razorpay</div>
+            <div class="badge">🛡 Safe Pay</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment success state -->
+  <div class="pay-success" id="paySuccess" style="display:none">
+    <div class="pay-success-icon">✓</div>
+    <h2>Order Confirmed!</h2>
+    <p>Your timepiece is being prepared. You will receive a confirmation on your registered phone.</p>
+    <div class="order-id" id="orderId">Order #TV-2026-0001</div>
+    <button class="btn-primary" onclick="showPage('home')">Back to Home</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PAGE: ADMIN
+═══════════════════════════════════════ -->
+<div id="page-admin" class="page">
+
+  <!-- Admin Login Gate -->
+  <div class="admin-login" id="adminLogin">
+    <div class="admin-login-box">
+      <div class="foot-logo" style="margin-bottom:2rem">TIME<em>VAULT</em></div>
+      <h2 class="admin-login-title">Admin Portal</h2>
+      <p class="admin-login-sub">Enter admin credentials to continue</p>
+      <div class="inp-group" style="margin-bottom:1rem">
+        <label class="inp-label">Username</label>
+        <input type="text" class="form-input" placeholder="admin" id="adminUser">
+      </div>
+      <div class="inp-group" style="margin-bottom:1.5rem">
+        <label class="inp-label">Password</label>
+        <input type="text" class="form-input" placeholder="••••••••" id="adminPass">
+      </div>
+      <button class="btn-full" onclick="adminLogin()">Enter Admin Panel →</button>
+      <p class="modal-note" style="margin-top:1rem">Demo: user <span>admin</span> / pass <span>1234</span></p>
+    </div>
+  </div>
+
+  <!-- Admin Dashboard -->
+  <div class="admin-page" id="adminDash" style="display:none">
+    <div class="admin-sidebar">
+      <div class="admin-brand">TIME<em>VAULT</em><br><span style="font-size:.45rem;letter-spacing:.3em;display:block;margin-top:.3rem;font-family:'Montserrat',sans-serif">ADMIN PANEL</span></div>
+      <nav class="admin-nav">
+        <div class="admin-nav-item active" onclick="adminSection(this,'dashboard')"><span class="admin-nav-icon">◈</span>Dashboard</div>
+        <div class="admin-nav-item" onclick="adminSection(this,'orders')"><span class="admin-nav-icon">◻</span>Orders</div>
+        <div class="admin-nav-item" onclick="adminSection(this,'products')"><span class="admin-nav-icon">◇</span>Products</div>
+        <div class="admin-nav-item" onclick="adminSection(this,'customers')"><span class="admin-nav-icon">◯</span>Customers</div>
+        <div class="admin-nav-item" onclick="showPage('home');return false"><span class="admin-nav-icon">←</span>Exit Admin</div>
+      </nav>
+    </div>
+
+    <div class="admin-main">
+      <!-- DASHBOARD -->
+      <div class="admin-section active" id="sec-dashboard">
+        <div class="admin-topbar">
+          <h1 class="admin-page-title">Dashboard</h1>
+          <span style="font-size:.55rem;letter-spacing:.3em;color:var(--mid);text-transform:uppercase">April 2026</span>
+        </div>
+        <div class="dash-cards">
+          <div class="dash-card"><div class="dash-card-label">Total Revenue</div><div class="dash-card-num">₹2.4L</div><div class="dash-card-sub dash-card-up">↑ 18% this month</div></div>
+          <div class="dash-card"><div class="dash-card-label">Orders Today</div><div class="dash-card-num">14</div><div class="dash-card-sub dash-card-up">↑ 3 from yesterday</div></div>
+          <div class="dash-card"><div class="dash-card-label">Active Products</div><div class="dash-card-num">47</div><div class="dash-card-sub" style="color:var(--mid)">Across 4 brands</div></div>
+          <div class="dash-card"><div class="dash-card-label">Customers</div><div class="dash-card-num">312</div><div class="dash-card-sub dash-card-up">↑ 24 new this week</div></div>
+        </div>
+        <div class="chart-area">
+          <div class="chart-title">Revenue — Last 7 Days</div>
+          <div class="chart-bars">
+            <div class="bar-wrap"><div class="bar" style="height:45%"></div><div class="bar-label">Mon</div></div>
+            <div class="bar-wrap"><div class="bar" style="height:65%"></div><div class="bar-label">Tue</div></div>
+            <div class="bar-wrap"><div class="bar" style="height:40%"></div><div class="bar-label">Wed</div></div>
+            <div class="bar-wrap"><div class="bar" style="height:80%"></div><div class="bar-label">Thu</div></div>
+            <div class="bar-wrap"><div class="bar" style="height:55%"></div><div class="bar-label">Fri</div></div>
+            <div class="bar-wrap"><div class="bar" style="height:95%"></div><div class="bar-label">Sat</div></div>
+            <div class="bar-wrap"><div class="bar" style="height:70%"></div><div class="bar-label">Sun</div></div>
+          </div>
+        </div>
+        <div class="admin-table-wrap">
+          <div class="admin-table-head"><span class="admin-table-title">Recent Orders</span></div>
+          <table>
+            <thead><tr><th>Order ID</th><th>Customer</th><th>Product</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
+            <tbody>
+              <tr><td>#TV-1042</td><td>Rahul K.</td><td>Casio Edifice</td><td>₹5,499</td><td><span class="status-badge status-paid">Paid</span></td><td>29 Apr</td></tr>
+              <tr><td>#TV-1041</td><td>Fathima N.</td><td>Titan Raga</td><td>₹7,299</td><td><span class="status-badge status-shipped">Shipped</span></td><td>29 Apr</td></tr>
+              <tr><td>#TV-1040</td><td>Arjun M.</td><td>G-Shock DW</td><td>₹4,199</td><td><span class="status-badge status-paid">Paid</span></td><td>28 Apr</td></tr>
+              <tr><td>#TV-1039</td><td>Priya S.</td><td>Fastrack Analog</td><td>₹2,499</td><td><span class="status-badge status-pending">Pending</span></td><td>28 Apr</td></tr>
+              <tr><td>#TV-1038</td><td>Arun P.</td><td>Casio A700</td><td>₹3,899</td><td><span class="status-badge status-cancelled">Cancelled</span></td><td>27 Apr</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ORDERS -->
+      <div class="admin-section" id="sec-orders">
+        <div class="admin-topbar">
+          <h1 class="admin-page-title">Orders</h1>
+          <div class="admin-table-actions"><button class="tbl-btn">Export CSV</button></div>
+        </div>
+        <div class="admin-table-wrap">
+          <div class="admin-table-head"><span class="admin-table-title">All Orders</span></div>
+          <table>
+            <thead><tr><th>Order ID</th><th>Customer</th><th>Phone</th><th>Product</th><th>Amount</th><th>Payment</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>#TV-1042</td><td>Rahul K.</td><td>+91 98001 xxxxx</td><td>Casio Edifice EX532</td><td>₹5,499</td><td>UPI</td><td><span class="status-badge status-paid">Paid</span></td></tr>
+              <tr><td>#TV-1041</td><td>Fathima N.</td><td>+91 97001 xxxxx</td><td>Titan Raga NN2616</td><td>₹7,299</td><td>Card</td><td><span class="status-badge status-shipped">Shipped</span></td></tr>
+              <tr><td>#TV-1040</td><td>Arjun M.</td><td>+91 94001 xxxxx</td><td>G-Shock DW5600</td><td>₹4,199</td><td>UPI</td><td><span class="status-badge status-paid">Paid</span></td></tr>
+              <tr><td>#TV-1039</td><td>Priya S.</td><td>+91 96001 xxxxx</td><td>Fastrack Analog 3256</td><td>₹2,499</td><td>COD</td><td><span class="status-badge status-pending">Pending</span></td></tr>
+              <tr><td>#TV-1038</td><td>Arun P.</td><td>+91 99001 xxxxx</td><td>Casio A700W</td><td>₹3,899</td><td>Net Banking</td><td><span class="status-badge status-cancelled">Cancelled</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PRODUCTS -->
+      <div class="admin-section" id="sec-products">
+        <div class="admin-topbar">
+          <h1 class="admin-page-title">Products</h1>
+          <div class="admin-table-actions">
+            <button class="tbl-btn primary" onclick="document.getElementById('addProdForm').classList.toggle('open')">+ Add Product</button>
+          </div>
+        </div>
+        <div class="prod-form" id="addProdForm">
+          <div class="prod-form-title">Add New Product</div>
+          <div class="prod-form-grid">
+            <div class="form-field"><label class="form-label">Product Name</label><input class="form-input" type="text" placeholder="Casio Edifice EX532"></div>
+            <div class="form-field"><label class="form-label">Brand</label>
+              <select class="form-input"><option>Casio</option><option>Titan</option><option>Fastrack</option><option>Wristár</option></select>
+            </div>
+            <div class="form-field"><label class="form-label">Price (₹)</label><input class="form-input" type="text" placeholder="4999"></div>
+            <div class="form-field"><label class="form-label">Stock</label><input class="form-input" type="text" placeholder="25"></div>
+          </div>
+          <div class="prod-form-grid full">
+            <div class="form-field"><label class="form-label">Description</label><textarea class="form-input" placeholder="Product description..."></textarea></div>
+          </div>
+          <div style="display:flex;gap:1rem">
+            <button class="btn-primary" style="padding:.8rem 2rem;font-size:.58rem">Save Product</button>
+            <button class="btn-ghost" style="padding:.8rem 1.5rem;font-size:.58rem;border:1px solid var(--bdr)" onclick="document.getElementById('addProdForm').classList.remove('open')">Cancel</button>
+          </div>
+        </div>
+        <div class="admin-table-wrap" style="margin-top:1.5rem">
+          <table>
+            <thead><tr><th>Image</th><th>Name</th><th>Brand</th><th>Price</th><th>Stock</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td><div class="prod-thumb"><svg viewBox="0 0 40 50" xmlns="http://www.w3.org/2000/svg"><rect x="14" y="1" width="12" height="14" rx="2" fill="#1a1a1a" stroke="rgba(255,255,255,.2)" stroke-width=".5"/><rect x="14" y="35" width="12" height="14" rx="2" fill="#1a1a1a" stroke="rgba(255,255,255,.2)" stroke-width=".5"/><rect x="4" y="13" width="32" height="24" rx="6" fill="#0d0d0d" stroke="rgba(255,255,255,.3)" stroke-width=".8"/><circle cx="20" cy="25" r="10" fill="#050505"/><line x1="20" y1="17" x2="20" y2="25" stroke="white" stroke-width="1.2" stroke-linecap="round"/><line x1="20" y1="19" x2="20" y2="25" stroke="white" stroke-width="1.8" stroke-linecap="round" transform="rotate(60 20 25)"/><circle cx="20" cy="25" r="1.5" fill="white"/></svg></div></td><td>Casio Edifice EX532</td><td>Casio</td><td>₹5,499</td><td>18</td><td><button class="tbl-btn" style="margin-right:.4rem">Edit</button><button class="tbl-btn">Delete</button></td></tr>
+              <tr><td><div class="prod-thumb"><svg viewBox="0 0 40 50" xmlns="http://www.w3.org/2000/svg"><rect x="14" y="1" width="12" height="14" rx="2" fill="#1a1a1a" stroke="rgba(255,255,255,.2)" stroke-width=".5"/><rect x="14" y="35" width="12" height="14" rx="2" fill="#1a1a1a" stroke="rgba(255,255,255,.2)" stroke-width=".5"/><rect x="3" y="12" width="34" height="26" rx="8" fill="#0d0d0d" stroke="rgba(255,255,255,.3)" stroke-width=".8"/><circle cx="20" cy="25" r="10" fill="#050505"/><text x="20" y="29" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="6" font-family="Cormorant Garamond,serif">Titan</text></svg></div></td><td>Titan Raga NN2616</td><td>Titan</td><td>₹7,299</td><td>9</td><td><button class="tbl-btn" style="margin-right:.4rem">Edit</button><button class="tbl-btn">Delete</button></td></tr>
+              <tr><td><div class="prod-thumb"><svg viewBox="0 0 40 50" xmlns="http://www.w3.org/2000/svg"><rect x="12" y="1" width="16" height="14" rx="2" fill="#1a1a1a" stroke="rgba(255,255,255,.2)" stroke-width=".5"/><rect x="12" y="35" width="16" height="14" rx="2" fill="#1a1a1a" stroke="rgba(255,255,255,.2)" stroke-width=".5"/><rect x="3" y="13" width="34" height="24" rx="3" fill="#0d0d0d" stroke="rgba(255,255,255,.3)" stroke-width=".8"/><rect x="6" y="16" width="28" height="18" rx="2" fill="#070707"/><text x="20" y="28" text-anchor="middle" fill="rgba(255,255,255,.6)" font-size="8" font-family="Cormorant Garamond,serif">10:09</text></svg></div></td><td>G-Shock DW5600E</td><td>Casio</td><td>₹4,199</td><td>22</td><td><button class="tbl-btn" style="margin-right:.4rem">Edit</button><button class="tbl-btn">Delete</button></td></tr>
+              <tr><td><div class="prod-thumb"><svg viewBox="0 0 40 50" xmlns="http://www.w3.org/2000/svg"><rect x="14" y="1" width="12" height="14" rx="2" fill="#1a1a1a" stroke="rgba(255,255,255,.2)" stroke-width=".5"/><rect x="14" y="35" width="12" height="14" rx="2" fill="#1a1a1a" stroke="rgba(255,255,255,.2)" stroke-width=".5"/><rect x="4" y="13" width="32" height="24" rx="6" fill="#0d0d0d" stroke="rgba(255,255,255,.3)" stroke-width=".8"/><circle cx="20" cy="25" r="10" fill="#050505"/><text x="20" y="29" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="5" font-family="Montserrat,sans-serif">FASTRACK</text></svg></div></td><td>Fastrack Analog 3256</td><td>Fastrack</td><td>₹2,499</td><td>34</td><td><button class="tbl-btn" style="margin-right:.4rem">Edit</button><button class="tbl-btn">Delete</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CUSTOMERS -->
+      <div class="admin-section" id="sec-customers">
+        <div class="admin-topbar">
+          <h1 class="admin-page-title">Customers</h1>
+          <div class="admin-table-actions"><button class="tbl-btn">Export</button></div>
+        </div>
+        <div class="admin-table-wrap">
+          <table>
+            <thead><tr><th>Name</th><th>Phone</th><th>Orders</th><th>Total Spent</th><th>Last Order</th><th>Location</th></tr></thead>
+            <tbody>
+              <tr><td>Rahul K.</td><td>+91 98001 xxxxx</td><td>4</td><td>₹18,400</td><td>29 Apr 2026</td><td>Kozhikode</td></tr>
+              <tr><td>Fathima N.</td><td>+91 97001 xxxxx</td><td>2</td><td>₹14,599</td><td>29 Apr 2026</td><td>Kannur</td></tr>
+              <tr><td>Arjun M.</td><td>+91 94001 xxxxx</td><td>1</td><td>₹4,199</td><td>28 Apr 2026</td><td>Nilambur</td></tr>
+              <tr><td>Priya S.</td><td>+91 96001 xxxxx</td><td>3</td><td>₹9,700</td><td>28 Apr 2026</td><td>Tirur</td></tr>
+              <tr><td>Arun P.</td><td>+91 99001 xxxxx</td><td>2</td><td>₹7,800</td><td>27 Apr 2026</td><td>Sulthan Bathery</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div><!-- end admin page -->
+
 <script>
-  // ── CURSOR: single RAF loop, no setTimeout lag ──
-  const cur = document.getElementById('cur');
-  let mx = -50, my = -50;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
-  (function loop() {
-    cur.style.transform = `translate(${mx - 16}px,${my - 16}px)`;
-    requestAnimationFrame(loop);
-  })();
+// ─── CURSOR ───
+const cur=document.getElementById('cur');
+let mx=-50,my=-50;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY},{passive:true});
+(function loop(){cur.style.transform=`translate(${mx-16}px,${my-16}px)`;requestAnimationFrame(loop)})();
 
-  // ── LOADER ──
-  setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 3200);
+// ─── LOADER ───
+setTimeout(()=>{document.getElementById('loader').style.display='none'},3200);
 
-  // ── LIVE WATCH HANDS ──
-  function tick() {
-    const now = new Date();
-    const s = now.getSeconds() + now.getMilliseconds() / 1000;
-    const m = now.getMinutes() + s / 60;
-    const h = (now.getHours() % 12) + m / 60;
-    const cx = 140, cy = 190;
-    const set = (id, deg) => {
-      const el = document.getElementById(id);
-      if (el) el.setAttribute('transform', `rotate(${deg} ${cx} ${cy})`);
-    };
-    set('sHand', s * 6);
-    set('mHand', m * 6);
-    set('hHand', h * 30);
+// ─── WATCH HANDS ───
+function tick(){
+  const now=new Date(),s=now.getSeconds(),m=now.getMinutes()+s/60,h=(now.getHours()%12)+m/60;
+  const set=(id,d)=>{const el=document.getElementById(id);if(el)el.setAttribute('transform',`rotate(${d} 140 190)`)};
+  set('sHand',s*6);set('mHand',m*6);set('hHand',h*30);
+}
+tick();setInterval(tick,1000);
+
+// ─── SCROLL REVEAL ───
+const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('on')}),{threshold:.1});
+document.querySelectorAll('.reveal').forEach(r=>obs.observe(r));
+
+// ─── PAGE SYSTEM ───
+function showPage(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  const pg=document.getElementById('page-'+p);
+  pg.classList.add('active');
+  // Admin page needs display:block so inner grid (adminDash) can set its own display:grid
+  // All other pages are fine with block
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(p==='checkout')renderCheckout();
+  if(p==='shop')renderShop();
+  if(p==='admin'){
+    // reset admin to login screen each time for demo
+    // already handled by adminLogin()
   }
-  tick();
-  setInterval(tick, 1000);
+}
 
-  // ── SCROLL REVEAL ──
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(r => obs.observe(r));
+// ─── PRODUCTS DATA ───
+const products=[
+  {id:1,brand:'Casio',name:'Edifice EX532',price:5499,badge:'New',cat:'casio'},
+  {id:2,brand:'Casio',name:'G-Shock DW5600',price:4199,badge:'New',cat:'casio'},
+  {id:3,brand:'Titan',name:'Raga NN2616',price:7299,badge:'',cat:'titan'},
+  {id:4,brand:'Fastrack',name:'Analog 3256',price:2499,badge:'',cat:'fastrack'},
+  {id:5,brand:'Casio',name:'A700W Vintage',price:3899,badge:'',cat:'casio'},
+  {id:6,brand:'Titan',name:'Edge Slimmest',price:8499,badge:'New',cat:'titan'},
+  {id:7,brand:'Fastrack',name:'Trendies 9827',price:1999,badge:'',cat:'fastrack'},
+  {id:8,brand:'Wristár',name:'Classic II',price:6299,badge:'',cat:'all'},
+];
+
+// Simple watch SVG generator
+function watchSVG(n){
+  const c=n%3===0?'rotate(60 100 130)':n%3===1?'rotate(110 100 130)':'rotate(150 100 130)';
+  return`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="72" y="2" width="56" height="65" rx="7" fill="#111" stroke="rgba(255,255,255,.15)" stroke-width=".7"/>
+    <rect x="72" y="193" width="56" height="65" rx="7" fill="#111" stroke="rgba(255,255,255,.15)" stroke-width=".7"/>
+    <rect x="18" y="62" width="164" height="136" rx="32" fill="#090909" stroke="rgba(255,255,255,.2)" stroke-width="1.2"/>
+    <circle cx="100" cy="130" r="58" fill="#050505"/>
+    <circle cx="100" cy="130" r="52" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="4"/>
+    <g stroke="rgba(255,255,255,.65)" stroke-width="1.4">
+      <line x1="100" y1="76" x2="100" y2="90" transform="rotate(0   100 130)"/>
+      <line x1="100" y1="76" x2="100" y2="90" transform="rotate(90  100 130)"/>
+      <line x1="100" y1="76" x2="100" y2="90" transform="rotate(180 100 130)"/>
+      <line x1="100" y1="76" x2="100" y2="90" transform="rotate(270 100 130)"/>
+    </g>
+    <line x1="100" y1="84" x2="100" y2="130" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    <line x1="100" y1="90" x2="100" y2="130" stroke="white" stroke-width="2.8" stroke-linecap="round" transform="${c}"/>
+    <circle cx="100" cy="130" r="3.5" fill="white"/>
+  </svg>`;
+}
+
+// ─── RENDER SHOP ───
+let activeFilter='all';
+function renderShop(filter){
+  if(filter)activeFilter=filter;
+  const grid=document.getElementById('shopGrid');
+  const filtered=activeFilter==='all'?products:products.filter(p=>p.cat===activeFilter);
+  grid.innerHTML=filtered.map(p=>`
+    <div class="shop-card">
+      ${p.badge?`<div class="shop-badge">${p.badge}</div>`:''}
+      <div class="shop-card-img">${watchSVG(p.id)}</div>
+      <div class="shop-card-info">
+        <div class="shop-card-brand">${p.brand}</div>
+        <div class="shop-card-name">${p.name}</div>
+        <div class="shop-card-price">₹${p.price.toLocaleString('en-IN')}</div>
+        <button class="shop-card-buy" onclick="addToCart(${p.id})">Add to Cart</button>
+      </div>
+    </div>`).join('');
+}
+renderShop();
+
+function filterShop(btn,cat){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderShop(cat);
+}
+
+// ─── CART ───
+let cart=[];
+function addToCart(id){
+  const p=products.find(x=>x.id===id);
+  if(!p)return;
+  const ex=cart.find(x=>x.id===id);
+  if(ex)ex.qty++;
+  else cart.push({...p,qty:1});
+  updateCartUI();
+  openCart();
+}
+function updateCartUI(){
+  const total=cart.reduce((s,x)=>s+x.qty,0);
+  document.getElementById('cartCount').textContent=total;
+  const items=document.getElementById('cartItems');
+  const foot=document.getElementById('cartFoot');
+  if(!cart.length){
+    items.innerHTML=`<div class="cart-empty"><div class="cart-empty-icon">◻</div><p>Your cart is empty</p></div>`;
+    foot.style.display='none';return;
+  }
+  items.innerHTML=cart.map(x=>`
+    <div class="cart-item">
+      <div class="cart-item-img">${watchSVG(x.id)}</div>
+      <div class="cart-item-info">
+        <div class="cart-item-brand">${x.brand}</div>
+        <div class="cart-item-name">${x.name}</div>
+        <div class="cart-item-price">₹${x.price.toLocaleString('en-IN')}</div>
+        <div class="cart-item-qty">
+          <button class="qty-btn" onclick="changeQty(${x.id},-1)">−</button>
+          <span class="qty-num">${x.qty}</span>
+          <button class="qty-btn" onclick="changeQty(${x.id},1)">+</button>
+        </div>
+      </div>
+      <button class="cart-item-remove" onclick="removeFromCart(${x.id})">✕</button>
+    </div>`).join('');
+  const sub=cart.reduce((s,x)=>s+x.price*x.qty,0);
+  document.getElementById('cartSubtotal').textContent='₹'+sub.toLocaleString('en-IN');
+  document.getElementById('cartTotal').textContent='₹'+sub.toLocaleString('en-IN');
+  foot.style.display='block';
+}
+function changeQty(id,d){
+  const x=cart.find(x=>x.id===id);
+  if(!x)return;
+  x.qty+=d;
+  if(x.qty<=0)cart=cart.filter(c=>c.id!==id);
+  updateCartUI();
+}
+function removeFromCart(id){cart=cart.filter(x=>x.id!==id);updateCartUI();}
+function openCart(){document.getElementById('cartDrawer').classList.add('open')}
+function closeCart(){document.getElementById('cartDrawer').classList.remove('open')}
+
+// ─── CHECKOUT ───
+function renderCheckout(){
+  const items=document.getElementById('orderItems');
+  const sub=cart.reduce((s,x)=>s+x.price*x.qty,0);
+  const gst=Math.round(sub*.18);
+  const grand=sub+gst;
+  items.innerHTML=cart.length?cart.map(x=>`
+    <div class="order-item">
+      <span class="order-item-name">${x.name} ×${x.qty}</span>
+      <span class="order-item-price">₹${(x.price*x.qty).toLocaleString('en-IN')}</span>
+    </div>`).join(''):`<div class="order-item"><span class="order-item-name" style="color:var(--mid)">No items in cart</span></div>`;
+  document.getElementById('orderSubtotal').textContent='₹'+sub.toLocaleString('en-IN');
+  document.getElementById('orderGst').textContent='₹'+gst.toLocaleString('en-IN');
+  document.getElementById('orderGrand').textContent='₹'+grand.toLocaleString('en-IN');
+}
+function selectPay(el){
+  document.querySelectorAll('.pay-method').forEach(m=>m.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function payWithRazorpay(){
+  if(!cart.length){alert('Add items to cart first');return;}
+  // In production: call FastAPI → get razorpay_order_id → open Razorpay SDK
+  // Demo: simulate payment flow
+  const btn=document.querySelector('.rzp-btn');
+  btn.textContent='Processing...';
+  btn.disabled=true;
+  setTimeout(()=>{
+    const sub=cart.reduce((s,x)=>s+x.price*x.qty,0);
+    const gst=Math.round(sub*.18);
+    const grand=sub+gst;
+    document.getElementById('checkoutForm').style.display='none';
+    document.getElementById('paySuccess').style.display='block';
+    document.getElementById('orderId').textContent=`Order #TV-2026-${Math.floor(1000+Math.random()*9000)}`;
+    cart=[];updateCartUI();
+    btn.textContent='Pay Securely — Powered by Razorpay';
+    btn.disabled=false;
+  },2000);
+}
+
+// ─── LOGIN ───
+let loggedIn=false,countdown;
+function openLogin(){
+  if(loggedIn){showPage('shop');return;}
+  document.getElementById('loginModal').classList.add('open');
+}
+function closeLogin(){document.getElementById('loginModal').classList.remove('open');clearInterval(countdown)}
+function sendOTP(){
+  const ph=document.getElementById('phoneInput').value;
+  if(ph.length<10){document.getElementById('phoneInput').style.borderColor='red';return;}
+  document.getElementById('otpSubText').textContent=`We sent a 6-digit OTP to +91 ${ph.replace(/(\d{5})(\d{5})/,'$1 $2')}`;
+  goStep(2);startCountdown();
+}
+function goStep(n){
+  document.querySelectorAll('.modal-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('step'+n).classList.add('active');
+}
+function startCountdown(){
+  let t=30;document.getElementById('countdown').textContent=t;
+  clearInterval(countdown);
+  countdown=setInterval(()=>{
+    t--;document.getElementById('countdown').textContent=t;
+    if(t<=0){clearInterval(countdown);document.getElementById('resendTimer').innerHTML='<span onclick="sendOTP()" style="color:white;text-decoration:underline;cursor:none">Resend OTP</span>';}
+  },1000);
+}
+function otpNext(el,nxtId){if(el.value.length===1&&nxtId){document.getElementById(nxtId).focus()}}
+function verifyOTP(){
+  // Demo: any 6-digit code works
+  const otp=['o1','o2','o3','o4','o5','o6'].map(id=>document.getElementById(id).value).join('');
+  if(otp.length<6){return;}
+  loggedIn=true;
+  clearInterval(countdown);
+  goStep(3);
+  document.getElementById('loginBtn').textContent='Account';
+  document.getElementById('loginBtn').classList.add('active');
+}
+
+// ─── ADMIN ───
+function adminLogin(){
+  const u=document.getElementById('adminUser').value;
+  const p=document.getElementById('adminPass').value;
+  if(u==='admin'&&p==='1234'){
+    document.getElementById('adminLogin').style.display='none';
+    document.getElementById('adminDash').style.display='grid';
+  } else {
+    document.getElementById('adminUser').style.borderColor='rgba(252,165,165,.5)';
+    document.getElementById('adminPass').style.borderColor='rgba(252,165,165,.5)';
+  }
+}
+function adminSection(el,sec){
+  document.querySelectorAll('.admin-nav-item').forEach(x=>x.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.admin-section').forEach(x=>x.classList.remove('active'));
+  document.getElementById('sec-'+sec).classList.add('active');
+}
+
+// Close cart on overlay click
+document.addEventListener('click',e=>{
+  if(e.target===document.getElementById('loginModal'))closeLogin();
+});
 </script>
 </body>
 </html>
